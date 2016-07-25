@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BandNotificationApp.iml" filepath="$PROJECT_DIR$/BandNotificationApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BandLayoutApp.iml" filepath="$PROJECT_DIR$/BandLayoutApp.iml" />
     </modules>
   </component>
 </project>
