@@ -15,7 +15,7 @@
 //THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 //CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 //IN THE SOFTWARE.
-package com.microsoft.band.sdk.sampleapp;
+package com.microsoft.band.sdk.monitor;
 
 import java.util.Date;
 import java.util.List;
@@ -28,7 +28,7 @@ import com.microsoft.band.BandIOException;
 import com.microsoft.band.BandInfo;
 import com.microsoft.band.ConnectionState;
 import com.microsoft.band.notifications.MessageFlags;
-import com.microsoft.band.sdk.sampleapp.notification.R;
+import com.microsoft.band.sdk.monitor.notification.R;
 import com.microsoft.band.tiles.BandTile;
 
 import android.app.Activity;
@@ -53,7 +53,7 @@ public class BandNotificationAppActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_band);
 
 		txtStatus = (TextView) findViewById(R.id.txtStatus);
 
