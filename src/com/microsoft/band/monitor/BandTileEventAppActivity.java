@@ -27,8 +27,11 @@ import com.microsoft.band.BandException;
 import com.microsoft.band.BandIOException;
 import com.microsoft.band.BandInfo;
 import com.microsoft.band.ConnectionState;
+import com.microsoft.band.UserConsent;
 import com.microsoft.band.monitor.R;
 import com.microsoft.band.notifications.MessageFlags;
+import com.microsoft.band.sensors.BandHeartRateEvent;
+import com.microsoft.band.sensors.BandHeartRateEventListener;
 import com.microsoft.band.tiles.BandTile;
 import com.microsoft.band.tiles.TileButtonEvent;
 import com.microsoft.band.tiles.TileEvent;
@@ -49,6 +52,7 @@ import com.microsoft.band.tiles.pages.WrappedTextBlockData;
 import com.microsoft.band.tiles.pages.WrappedTextBlockFont;
 import com.microsoft.band.sensors.BandSkinTemperatureEvent;
 import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
+import com.microsoft.band.sensors.HeartRateConsentListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -74,6 +78,7 @@ public class BandTileEventAppActivity extends Activity {
 	private static final UUID pageId1 = UUID.fromString("b1234567-89ab-cdef-0123-456789abcd00");
 
 	private float temp = 0;
+	private float hRate = 0;
 
 	BandSkinTemperatureEventListener mTempListener = new BandSkinTemperatureEventListener() {
 		@Override
@@ -81,6 +86,24 @@ public class BandTileEventAppActivity extends Activity {
 			temp = event.getTemperature();
 		}
 	};
+
+	BandHeartRateEventListener mRateListener = new BandHeartRateEventListener() {
+		@Override
+		public void onBandHeartRateChanged(BandHeartRateEvent bandHeartRateEvent) {
+			hRate = bandHeartRateEvent.getHeartRate();
+		}
+	};
+
+	HeartRateConsentListener consentListener = new HeartRateConsentListener() {
+		@Override
+		public void userAccepted(boolean b) {
+			if(!b) {
+				hRate = -1;
+			}
+		}
+	};
+
+	StartTask startTask;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +114,14 @@ public class BandTileEventAppActivity extends Activity {
 		scrollView = (ScrollView) findViewById(R.id.svTest);
         
 		btnStart = (Button) findViewById(R.id.startButton);
+		startTask = new StartTask(this);
         btnStart.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				disableButtons();
-				new StartTask().execute();
+				if(startTask != null) {
+					startTask.execute();
+				}
 			}
 		});
 
@@ -105,7 +131,7 @@ public class BandTileEventAppActivity extends Activity {
 			public void onClick(View v) {
 				disableButtons();
 				new StopTask().execute();
-    }
+			}
 		});
 	}
 
@@ -149,23 +175,39 @@ public class BandTileEventAppActivity extends Activity {
 			} else if (intent.getAction() == TileEvent.ACTION_TILE_BUTTON_PRESSED) {
 				TileButtonEvent buttonData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
 				appendToUI("Button event received\n" + buttonData.toString() + "\n\n");
-				try {
-					if(temp != 0) {
-						sendMessage("" + temp);
-					}
-				} catch (BandException e) {
-					handleBandException(e);
-				} catch (Exception e) {
-					appendToUI(e.getMessage());
-				}
+				sendNotifications();
 			} else if (intent.getAction() == TileEvent.ACTION_TILE_CLOSED) {
 				TileEvent tileCloseData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
 				appendToUI("Tile close event received\n" + tileCloseData.toString() + "\n\n");
 			}
 		}
     }
+
+	private void sendNotifications() {
+		try {
+			if(temp != 0 && hRate != -1) {
+				sendMessage("Temp: " + temp + "\nHeart Rate: " + hRate);
+			} else if(temp == 0) {
+				sendMessage("Temperature not set"+ "\nHeart Rate: " + hRate);
+			} else if(hRate == -1){
+				sendMessage("HeartRate consent not given"+ "\nTemp: " + temp);
+			} else if(hRate == 0) {
+				sendMessage("HeartRate not set"+ "\nTemp: " + temp);
+			}
+		} catch (BandException e) {
+			handleBandException(e);
+		} catch (Exception e) {
+			appendToUI(e.getMessage());
+		}
+	}
 	
 	private class StartTask extends AsyncTask<Void, Void, Boolean> {
+		public BandTileEventAppActivity activity;
+
+		public StartTask(BandTileEventAppActivity a)
+		{
+			this.activity = a;
+		}
 		@Override
 	    protected void onPreExecute() {
 			txtStatus.setText("");
@@ -183,7 +225,13 @@ public class BandTileEventAppActivity extends Activity {
 					appendToUI("Band isn't connected. Please make sure bluetooth is on and the band is in range.\n");
 					return false;
 				}
+				getBaseContext();
 				client.getSensorManager().registerSkinTemperatureEventListener(mTempListener);
+				if(client.getSensorManager().getCurrentHeartRateConsent() !=
+						UserConsent.GRANTED) {
+					client.getSensorManager().requestHeartRateConsent(activity, consentListener);
+				}
+				client.getSensorManager().registerHeartRateEventListener(mRateListener);
 			} catch (BandException e) {
 				handleBandException(e);
 				return false;
@@ -203,7 +251,7 @@ public class BandTileEventAppActivity extends Activity {
 				btnStart.setEnabled(true);
 			}
 		}
-				}
+	}
 				
 	private class StopTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
@@ -217,6 +265,7 @@ public class BandTileEventAppActivity extends Activity {
 					appendToUI("Band isn't connected. Please make sure bluetooth is on and the band is in range.\n");
 				}
 				client.getSensorManager().unregisterSkinTemperatureEventListener(mTempListener);
+				client.getSensorManager().unregisterHeartRateEventListener(mRateListener);
 			} catch (BandException e) {
 				handleBandException(e);
 				return false;
