@@ -10,7 +10,6 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="com.microsoft.band.service.access.BIND_BAND_SERVICE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -19,7 +18,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <application
@@ -56,14 +54,11 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
-
+            android:label="@string/title_activity_login" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
@@ -73,6 +68,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".LandingPageActivity"
+            android:label="@string/title_activity_landing_page"></activity>
     </application>
 
 </manifest>
