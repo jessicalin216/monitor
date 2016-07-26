@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\src\main\shaders"/></dataSet><dataSet config="debug"><source path="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\build-types\debug\shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\src\main\shaders"/></dataSet><dataSet config="debug"><source path="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\build-types\debug\shaders"/></dataSet></merger>

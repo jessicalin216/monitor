@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.microsoft.sdk.bandlayoutapp.MainActivity" >
+    tools:context="com.microsoft.sdk.bandtileeventapp.MainActivity" >
 
     <item
         android:id="@+id/action_settings"

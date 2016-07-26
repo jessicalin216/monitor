@@ -2,25 +2,25 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jar="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.1"
-        sha1="5862c5f4bb865736efda62942a4a684ee51eb3b0">
-        <dex dex="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_8b9f7489e098224f52901678fa2f2552356786a1\classes.dex" />
+        sha1="47ef30c05175f8e983fc8dfd7aae7d7d9bba00f8">
+        <dex dex="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_b6a3c4085458caf5c225808bf3450988b5d21c8a\classes.dex" />
     </item>
     <item
-        jar="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jar="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         revision="23.0.1"
-        sha1="5126490106f851acfeeb70e98b538bf1c8bf90a0">
-        <dex dex="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_1294fc8579b72b01e0af0db72372118c9abf0df9\classes.dex" />
+        sha1="bfa4ac777e22adecbeb16d1adff0e984dd06ab9a">
+        <dex dex="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_b01506ed1ed6b9c8e43448d192a370d286681857\classes.dex" />
     </item>
     <item
-        jar="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\libs\microsoft-band-1.3.20307.2.jar"
+        jar="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\libs\microsoft-band-1.3.20307.2.jar"
         jumboMode="true"
         revision="23.0.1"
         sha1="f14888994429a404549c37653bc6e4c6a8c39a8e">
-        <dex dex="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\build\intermediates\transforms\dex\debug\folders\1000\2\microsoft-band-1.3.20307.2_c157fac0d7b116a431c0c0c6a8a656cb5f3d3c9a\classes.dex" />
+        <dex dex="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\build\intermediates\transforms\dex\debug\folders\1000\2\microsoft-band-1.3.20307.2_0d2331f8f70458675425765305353f522eef551f\classes.dex" />
     </item>
 
 </items>

@@ -4,29 +4,29 @@
     api-level="23"
     density="xxhdpi"
     format="7"
-    timestamp="253394832517848"
-    token="-143788546361875744" >
+    timestamp="253488897265341"
+    token="2473640612349229604" >
 
     <task
         name="javac"
-        duration="705" />
+        duration="444" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="234" />
+        duration="203" />
     <task
         name="verifier"
-        duration="46" />
+        duration="47" />
 
     <artifact
-        location="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\build\outputs\apk\BandLayoutApp-debug.apk"
+        location="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\build\outputs\apk\BandTileEventApp-debug.apk"
         type="MAIN" />
 
-    <build timestamp="253394832517848" >
+    <build timestamp="253488897265341" >
         <artifact
-            location="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandLayoutApp\build\outputs\apk\BandLayoutApp-debug.apk"
+            location="C:\Users\t-anng\Desktop\Microsoft Band SDK and Samples for Android\BandTileEventApp\build\outputs\apk\BandTileEventApp-debug.apk"
             type="MAIN" />
     </build>
 
