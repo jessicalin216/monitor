@@ -23,4 +23,12 @@ public class MainActivity extends Activity {
 //        intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
+
+    public void sendMessage2(View view) {
+        Intent intent = new Intent(this, CalendarActivity.class);
+//        EditText editText = (EditText) findViewById(R.id.edit_message);
+//        String message = editText.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
 }

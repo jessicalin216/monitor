@@ -19,6 +19,9 @@
     <string name="stop">Stop</string>
     <string name="title_activity_login">Sign in</string>
 
+    <string name="calendar">Calendar</string>
+    <string name="list">List</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
