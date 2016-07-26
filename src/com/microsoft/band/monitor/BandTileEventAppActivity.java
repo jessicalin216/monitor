@@ -282,15 +282,15 @@ public class BandTileEventAppActivity extends Activity {
 
 	private PageLayout createButtonLayout() {
 		return new PageLayout(
-				new FlowPanel(0, 0, 260, 105, FlowPanelOrientation.VERTICAL)
-						.addElements(new WrappedTextBlock(new PageRect(0, 0, 200, 102), WrappedTextBlockFont.SMALL).setId(1))
-						.addElements(new FilledButton(0, 0, 45, 45).setId(2).setBackgroundColor(Color.BLUE)));
+				new FlowPanel(0, 0, 260, 105, FlowPanelOrientation.HORIZONTAL)
+						.addElements(new WrappedTextBlock(new PageRect(0, 0, 185, 102), WrappedTextBlockFont.SMALL).setMargins(10, 5, 0, 0).setId(1))
+						.addElements(new FilledButton(200, 0, 60, 60).setId(2).setMargins(0, 33, 0, 0).setBackgroundColor(Color.BLUE)));
 	}
 	
 	private void updatePages() throws BandIOException {
 		client.getTileManager().setPages(tileId, 
 				new PageData(pageId1, 0)
-					.update(new WrappedTextBlockData(1, "Click the button to start your period"))
+					.update(new WrappedTextBlockData(1, "Click the button if your period has started."))
 					.update(new FilledButtonData(2, Color.YELLOW)));
 		appendToUI("Send button page data to tile page \n\n");
 	}

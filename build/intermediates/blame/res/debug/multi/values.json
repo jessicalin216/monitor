@@ -11,14 +11,7 @@
                     "endOffset": 108
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\dimens.xml",
-                    "position": {
-                        "startLine": 3,
-                        "startColumn": 4,
-                        "startOffset": 92,
-                        "endColumn": 57,
-                        "endOffset": 145
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\dimens.xml"
                 }
             },
             {
@@ -30,14 +23,7 @@
                     "endOffset": 164
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\dimens.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 4,
-                        "startOffset": 151,
-                        "endColumn": 55,
-                        "endOffset": 202
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\dimens.xml"
                 }
             },
             {
@@ -49,14 +35,7 @@
                     "endOffset": 217
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml",
-                    "position": {
-                        "startLine": 5,
-                        "startColumn": 4,
-                        "startOffset": 171,
-                        "endColumn": 52,
-                        "endOffset": 219
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml"
                 }
             },
             {
@@ -64,8 +43,8 @@
                     "startLine": 5,
                     "startColumn": 4,
                     "startOffset": 222,
-                    "endColumn": 56,
-                    "endOffset": 274
+                    "endColumn": 44,
+                    "endOffset": 262
                 },
                 "from": {
                     "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml",
@@ -73,8 +52,8 @@
                         "startLine": 3,
                         "startColumn": 4,
                         "startOffset": 59,
-                        "endColumn": 56,
-                        "endOffset": 111
+                        "endColumn": 44,
+                        "endOffset": 99
                     }
                 }
             },
@@ -82,158 +61,99 @@
                 "to": {
                     "startLine": 6,
                     "startColumn": 4,
-                    "startOffset": 279,
+                    "startOffset": 267,
                     "endColumn": 52,
-                    "endOffset": 327
+                    "endOffset": 315
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 4,
-                        "startOffset": 117,
-                        "endColumn": 52,
-                        "endOffset": 165
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml"
                 }
             },
             {
                 "to": {
                     "startLine": 7,
                     "startColumn": 4,
-                    "startOffset": 332,
+                    "startOffset": 320,
                     "endColumn": 49,
-                    "endOffset": 377
+                    "endOffset": 365
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml",
-                    "position": {
-                        "startLine": 16,
-                        "startColumn": 4,
-                        "startOffset": 770,
-                        "endColumn": 49,
-                        "endOffset": 815
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml"
                 }
             },
             {
                 "to": {
                     "startLine": 8,
                     "startColumn": 4,
-                    "startOffset": 382,
+                    "startOffset": 370,
                     "endColumn": 58,
-                    "endOffset": 436
+                    "endOffset": 424
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml",
-                    "position": {
-                        "startLine": 17,
-                        "startColumn": 4,
-                        "startOffset": 821,
-                        "endColumn": 58,
-                        "endOffset": 875
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml"
                 }
             },
             {
                 "to": {
                     "startLine": 9,
                     "startColumn": 4,
-                    "startOffset": 441,
+                    "startOffset": 429,
                     "endColumn": 39,
-                    "endOffset": 476
+                    "endOffset": 464
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml",
-                    "position": {
-                        "startLine": 15,
-                        "startColumn": 4,
-                        "startOffset": 729,
-                        "endColumn": 39,
-                        "endOffset": 764
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml"
                 }
             },
             {
                 "to": {
                     "startLine": 10,
                     "startColumn": 4,
-                    "startOffset": 481,
+                    "startOffset": 469,
                     "endLine": 17,
                     "endColumn": 78,
-                    "endOffset": 970
+                    "endOffset": 958
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml",
-                    "position": {
-                        "startLine": 7,
-                        "startColumn": 4,
-                        "startOffset": 227,
-                        "endLine": 14,
-                        "endColumn": 78,
-                        "endOffset": 723
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml"
                 }
             },
             {
                 "to": {
                     "startLine": 18,
                     "startColumn": 4,
-                    "startOffset": 975,
+                    "startOffset": 963,
                     "endColumn": 37,
-                    "endOffset": 1008
+                    "endOffset": 996
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml",
-                    "position": {
-                        "startLine": 18,
-                        "startColumn": 4,
-                        "startOffset": 881,
-                        "endColumn": 37,
-                        "endOffset": 914
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\strings.xml"
                 }
             },
             {
                 "to": {
                     "startLine": 19,
                     "startColumn": 4,
-                    "startOffset": 1013,
+                    "startOffset": 1001,
                     "endLine": 25,
                     "endColumn": 12,
-                    "endOffset": 1299
+                    "endOffset": 1287
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\styles.xml",
-                    "position": {
-                        "startLine": 6,
-                        "startColumn": 4,
-                        "startOffset": 192,
-                        "endLine": 12,
-                        "endColumn": 12,
-                        "endOffset": 484
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\styles.xml"
                 }
             },
             {
                 "to": {
                     "startLine": 26,
                     "startColumn": 4,
-                    "startOffset": 1304,
+                    "startOffset": 1292,
                     "endLine": 28,
                     "endColumn": 12,
-                    "endOffset": 1459
+                    "endOffset": 1447
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\styles.xml",
-                    "position": {
-                        "startLine": 15,
-                        "startColumn": 4,
-                        "startOffset": 525,
-                        "endLine": 17,
-                        "endColumn": 12,
-                        "endOffset": 682
-                    }
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values\\styles.xml"
                 }
             }
         ]
