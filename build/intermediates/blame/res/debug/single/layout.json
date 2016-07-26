@@ -1,6 +1,10 @@
 [
     {
-        "merged": "C:\\Users\\t-anng\\Desktop\\Microsoft Band SDK and Samples for Android\\BandTileEventApp\\build\\intermediates\\res\\merged\\debug\\layout\\activity_main.xml",
-        "source": "C:\\Users\\t-anng\\Desktop\\Microsoft Band SDK and Samples for Android\\BandTileEventApp\\res\\layout\\activity_main.xml"
+        "merged": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\build\\intermediates\\res\\merged\\debug\\layout\\activity_band.xml",
+        "source": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\layout\\activity_band.xml"
+    },
+    {
+        "merged": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\build\\intermediates\\res\\merged\\debug\\layout\\activity_main.xml",
+        "source": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\layout\\activity_main.xml"
     }
 ]

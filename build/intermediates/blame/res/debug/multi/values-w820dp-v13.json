@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Users\\t-anng\\Desktop\\Microsoft Band SDK and Samples for Android\\BandTileEventApp\\build\\intermediates\\res\\merged\\debug\\values-w820dp-v13\\values-w820dp-v13.xml",
+        "outputFile": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\build\\intermediates\\res\\merged\\debug\\values-w820dp-v13\\values-w820dp-v13.xml",
         "map": [
             {
                 "to": {
@@ -11,13 +11,13 @@
                     "endOffset": 108
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Desktop\\Microsoft Band SDK and Samples for Android\\BandTileEventApp\\res\\values-w820dp\\dimens.xml",
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values-w820dp\\dimens.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
-                        "startOffset": 310,
+                        "startOffset": 312,
                         "endColumn": 57,
-                        "endOffset": 363
+                        "endOffset": 365
                     }
                 }
             }

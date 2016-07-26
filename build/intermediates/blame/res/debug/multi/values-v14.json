@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Users\\t-anng\\Desktop\\Microsoft Band SDK and Samples for Android\\BandTileEventApp\\build\\intermediates\\res\\merged\\debug\\values-v14\\values-v14.xml",
+        "outputFile": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\build\\intermediates\\res\\merged\\debug\\values-v14\\values-v14.xml",
         "map": [
             {
                 "to": {
@@ -12,14 +12,14 @@
                     "endOffset": 201
                 },
                 "from": {
-                    "file": "C:\\Users\\t-anng\\Desktop\\Microsoft Band SDK and Samples for Android\\BandTileEventApp\\res\\values-v14\\styles.xml",
+                    "file": "C:\\Users\\t-anng\\Documents\\GitHub\\monitor\\res\\values-v14\\styles.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
-                        "startOffset": 225,
+                        "startOffset": 227,
                         "endLine": 9,
                         "endColumn": 12,
-                        "endOffset": 373
+                        "endOffset": 375
                     }
                 }
             }
