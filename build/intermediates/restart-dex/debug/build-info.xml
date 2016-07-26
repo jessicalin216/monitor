@@ -4,30 +4,38 @@
     api-level="23"
     density="xxhdpi"
     format="7"
-    timestamp="271813958379075"
-    token="-2680168207369367255" >
+    timestamp="272157667016179"
+    token="-2680168207369367255"
+    verifier="COMPATIBLE" >
 
     <task
         name="javac"
-        duration="538" />
+        duration="187" />
     <task
         name="instant-run-dex"
-        duration="0" />
+        duration="768" />
     <task
         name="instant-run-transform"
-        duration="124" />
+        duration="162" />
     <task
         name="verifier"
-        duration="26" />
+        duration="29" />
 
     <artifact
-        location="C:\Users\t-anng\Documents\GitHub\monitor\build\outputs\apk\monitor-debug.apk"
-        type="MAIN" />
+        location="C:\Users\t-anng\Documents\GitHub\monitor\build\intermediates\reload-dex\debug\classes.dex"
+        type="RELOAD_DEX" />
 
     <build timestamp="271813958379075" >
         <artifact
             location="C:\Users\t-anng\Documents\GitHub\monitor\build\outputs\apk\monitor-debug.apk"
             type="MAIN" />
+    </build>
+    <build
+        timestamp="272157667016179"
+        verifier="COMPATIBLE" >
+        <artifact
+            location="C:\Users\t-anng\Documents\GitHub\monitor\build\intermediates\reload-dex\debug\classes.dex"
+            type="RELOAD_DEX" />
     </build>
 
 </instant-run>
