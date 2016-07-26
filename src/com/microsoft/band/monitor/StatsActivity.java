@@ -6,15 +6,16 @@ import android.widget.TabHost;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 
-public class CalendarActivity extends Activity {
+public class StatsActivity extends Activity {
     TabHost tabHost;
     ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
+        setContentView(R.layout.activity_stats);
 
+        // Tabs
         TabHost host = (TabHost) findViewById(R.id.tabHost);
         host.setup();
 
@@ -28,6 +29,7 @@ public class CalendarActivity extends Activity {
         spec.setIndicator("List");
         host.addTab(spec);
 
+        // List View
         listView = (ListView) findViewById(R.id.list);
         String[] blah = new String[]{"I'm on my period", "Such bad cramps", "I want chocolate", "I'm sad"};
 

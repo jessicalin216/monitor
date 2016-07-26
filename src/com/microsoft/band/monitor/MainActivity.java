@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.microsoft.band.monitor.R;
-
 public class MainActivity extends Activity {
 
     @Override
@@ -25,7 +23,7 @@ public class MainActivity extends Activity {
     }
 
     public void sendMessage2(View view) {
-        Intent intent = new Intent(this, CalendarActivity.class);
+        Intent intent = new Intent(this, StatsActivity.class);
 //        EditText editText = (EditText) findViewById(R.id.edit_message);
 //        String message = editText.getText().toString();
 //        intent.putExtra(EXTRA_MESSAGE, message);

@@ -71,7 +71,7 @@
         <activity
             android:name=".LandingPageActivity"
             android:label="@string/title_activity_landing_page" />
-        <activity android:name=".CalendarActivity"></activity>
+        <activity android:name=".StatsActivity"></activity>
     </application>
 
 </manifest>
