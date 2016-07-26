@@ -17,6 +17,7 @@
 //IN THE SOFTWARE.
 package com.microsoft.band.monitor;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +28,7 @@ import com.microsoft.band.BandIOException;
 import com.microsoft.band.BandInfo;
 import com.microsoft.band.ConnectionState;
 import com.microsoft.band.monitor.R;
+import com.microsoft.band.notifications.MessageFlags;
 import com.microsoft.band.tiles.BandTile;
 import com.microsoft.band.tiles.TileButtonEvent;
 import com.microsoft.band.tiles.TileEvent;
@@ -45,6 +47,8 @@ import com.microsoft.band.tiles.pages.TextButtonData;
 import com.microsoft.band.tiles.pages.WrappedTextBlock;
 import com.microsoft.band.tiles.pages.WrappedTextBlockData;
 import com.microsoft.band.tiles.pages.WrappedTextBlockFont;
+import com.microsoft.band.sensors.BandSkinTemperatureEvent;
+import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -68,6 +72,15 @@ public class BandTileEventAppActivity extends Activity {
 	private ScrollView scrollView;
 	private static final UUID tileId = UUID.fromString("cc0D508F-70A3-47D4-BBA3-812BADB1F8Aa");
 	private static final UUID pageId1 = UUID.fromString("b1234567-89ab-cdef-0123-456789abcd00");
+
+	private float temp = 0;
+
+	BandSkinTemperatureEventListener mTempListener = new BandSkinTemperatureEventListener() {
+		@Override
+		public void onBandSkinTemperatureChanged(BandSkinTemperatureEvent event) {
+			temp = event.getTemperature();
+		}
+	};
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +149,15 @@ public class BandTileEventAppActivity extends Activity {
 			} else if (intent.getAction() == TileEvent.ACTION_TILE_BUTTON_PRESSED) {
 				TileButtonEvent buttonData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
 				appendToUI("Button event received\n" + buttonData.toString() + "\n\n");
+				try {
+					if(temp != 0) {
+						sendMessage("" + temp);
+					}
+				} catch (BandException e) {
+					handleBandException(e);
+				} catch (Exception e) {
+					appendToUI(e.getMessage());
+				}
 			} else if (intent.getAction() == TileEvent.ACTION_TILE_CLOSED) {
 				TileEvent tileCloseData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
 				appendToUI("Tile close event received\n" + tileCloseData.toString() + "\n\n");
@@ -161,6 +183,7 @@ public class BandTileEventAppActivity extends Activity {
 					appendToUI("Band isn't connected. Please make sure bluetooth is on and the band is in range.\n");
 					return false;
 				}
+				client.getSensorManager().registerSkinTemperatureEventListener(mTempListener);
 			} catch (BandException e) {
 				handleBandException(e);
 				return false;
@@ -193,6 +216,7 @@ public class BandTileEventAppActivity extends Activity {
 				} else {
 					appendToUI("Band isn't connected. Please make sure bluetooth is on and the band is in range.\n");
 				}
+				client.getSensorManager().unregisterSkinTemperatureEventListener(mTempListener);
 			} catch (BandException e) {
 				handleBandException(e);
 				return false;
@@ -294,7 +318,12 @@ public class BandTileEventAppActivity extends Activity {
 					.update(new FilledButtonData(2, Color.YELLOW)));
 		appendToUI("Send button page data to tile page \n\n");
 	}
-	
+
+	private void sendMessage(String message) throws BandIOException {
+		client.getNotificationManager().sendMessage(tileId, "Tile Message", message, new Date(), MessageFlags.SHOW_DIALOG);
+		appendToUI(message + "\n");
+	}
+
 	private boolean getConnectedBandClient() throws InterruptedException, BandException {
 		if (client == null) {
 			BandInfo[] devices = BandClientManager.getInstance().getPairedBands();
