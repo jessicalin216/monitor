@@ -340,7 +340,7 @@ public class ServerCom
     /**
      *
      */
-    public static ArrayList<SymptomEntry> get_symptoms(String username) {
+    public static SymptomEntry get_symptoms(String username) {
         HttpURLConnection connection = null;
 
         String args = "get_symptoms";
@@ -368,7 +368,7 @@ public class ServerCom
                         date, acne, cramps, tired));
             }
             System.out.println(response.toString());
-            return symptomArray;
+            return symptomArray.get(0);
 
         } catch (Exception e) {
             e.printStackTrace();
