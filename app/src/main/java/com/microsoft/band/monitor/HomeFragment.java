@@ -201,6 +201,7 @@ public class HomeFragment extends Fragment {
 //        Map<String, Integer> map = new HashMap<String, Integer>();
 //        map.put("blah", );
         // TODO: update for all emotions
+
         monMon.setImageResource(isPeriodOn ? R.drawable.p_default : R.drawable.np_default);
     }
 
