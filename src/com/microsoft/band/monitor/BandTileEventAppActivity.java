@@ -17,6 +17,7 @@
 //IN THE SOFTWARE.
 package com.microsoft.band.monitor;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -28,23 +29,19 @@ import com.microsoft.band.BandIOException;
 import com.microsoft.band.BandInfo;
 import com.microsoft.band.ConnectionState;
 import com.microsoft.band.UserConsent;
-import com.microsoft.band.monitor.R;
+
 import com.microsoft.band.notifications.MessageFlags;
 import com.microsoft.band.sensors.BandHeartRateEvent;
 import com.microsoft.band.sensors.BandHeartRateEventListener;
 import com.microsoft.band.tiles.BandTile;
 import com.microsoft.band.tiles.TileButtonEvent;
 import com.microsoft.band.tiles.TileEvent;
-import com.microsoft.band.tiles.pages.FilledButton;
-import com.microsoft.band.tiles.pages.FilledButtonData;
 import com.microsoft.band.tiles.pages.FlowPanel;
 import com.microsoft.band.tiles.pages.FlowPanelOrientation;
+import com.microsoft.band.tiles.pages.HorizontalAlignment;
 import com.microsoft.band.tiles.pages.PageData;
 import com.microsoft.band.tiles.pages.PageLayout;
 import com.microsoft.band.tiles.pages.PageRect;
-import com.microsoft.band.tiles.pages.TextBlock;
-import com.microsoft.band.tiles.pages.TextBlockData;
-import com.microsoft.band.tiles.pages.TextBlockFont;
 import com.microsoft.band.tiles.pages.TextButton;
 import com.microsoft.band.tiles.pages.TextButtonData;
 import com.microsoft.band.tiles.pages.WrappedTextBlock;
@@ -55,12 +52,15 @@ import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
 import com.microsoft.band.sensors.HeartRateConsentListener;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -76,9 +76,11 @@ public class BandTileEventAppActivity extends Activity {
 	private ScrollView scrollView;
 	private static final UUID tileId = UUID.fromString("cc0D508F-70A3-47D4-BBA3-812BADB1F8Aa");
 	private static final UUID pageId1 = UUID.fromString("b1234567-89ab-cdef-0123-456789abcd00");
+	private static final UUID pageId2 = UUID.fromString("c1234567-89ab-cdef-0123-456789abcd00");
 
 	private float temp = 0;
 	private float hRate = 0;
+	private boolean onPeriod = false;
 
 	BandSkinTemperatureEventListener mTempListener = new BandSkinTemperatureEventListener() {
 		@Override
@@ -133,6 +135,18 @@ public class BandTileEventAppActivity extends Activity {
 				new StopTask().execute();
 			}
 		});
+
+		/* Retrieve a PendingIntent that will perform a broadcast */
+		Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+
+		AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        /* Repeating on every 15 seconds interval */
+		manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+				10, pendingIntent);
+		Log.d("ALARMLOG", "AlarmManager initialized");
 	}
 
 	@Override
@@ -164,7 +178,8 @@ public class BandTileEventAppActivity extends Activity {
         }
         super.onDestroy();
     }
-    
+
+	//method for seeing what is going on with the band
     private void processIntent(Intent intent){
     	String extraString = intent.getStringExtra(getString(R.string.intent_key));
 		
@@ -175,7 +190,18 @@ public class BandTileEventAppActivity extends Activity {
 			} else if (intent.getAction() == TileEvent.ACTION_TILE_BUTTON_PRESSED) {
 				TileButtonEvent buttonData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
 				appendToUI("Button event received\n" + buttonData.toString() + "\n\n");
-				sendNotifications();
+				try {
+//					if(temp != 0) {
+//						sendMessage("" + temp);
+//					}
+
+					sendMessage("TEST NOTIFICATION");
+					periodButtonClicked();
+				} catch (BandException e) {
+					handleBandException(e);
+				} catch (Exception e) {
+					appendToUI(e.getMessage());
+				}
 			} else if (intent.getAction() == TileEvent.ACTION_TILE_CLOSED) {
 				TileEvent tileCloseData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
 				appendToUI("Tile close event received\n" + tileCloseData.toString() + "\n\n");
@@ -341,7 +367,7 @@ public class BandTileEventAppActivity extends Activity {
         Bitmap tileIcon = BitmapFactory.decodeResource(getBaseContext().getResources(), R.raw.b_icon, options);
 
         BandTile tile = new BandTile.Builder(tileId, "Button Tile", tileIcon)
-			.setPageLayouts(createButtonLayout())
+			.setPageLayouts(createButtonLayout(), createInsightLayout()) // add the layouts here
 			.build();
 		appendToUI("Button Tile is adding ...\n");
 		if (client.getTileManager().addTile(this, tile).await()) {
@@ -353,24 +379,58 @@ public class BandTileEventAppActivity extends Activity {
 		}
 	}
 
+	// layout for page where you can toggle period on/off
 	private PageLayout createButtonLayout() {
 		return new PageLayout(
-				new FlowPanel(0, 0, 260, 105, FlowPanelOrientation.HORIZONTAL)
-						.addElements(new WrappedTextBlock(new PageRect(0, 0, 185, 102), WrappedTextBlockFont.SMALL).setMargins(10, 5, 0, 0).setId(1))
-						.addElements(new FilledButton(200, 0, 60, 60).setId(2).setMargins(0, 33, 0, 0).setBackgroundColor(Color.BLUE)));
-	}
-	
-	private void updatePages() throws BandIOException {
-		client.getTileManager().setPages(tileId, 
-				new PageData(pageId1, 0)
-					.update(new WrappedTextBlockData(1, "Click the button if your period has started."))
-					.update(new FilledButtonData(2, Color.YELLOW)));
-		appendToUI("Send button page data to tile page \n\n");
+				new FlowPanel(15, 0, 260, 120, FlowPanelOrientation.VERTICAL)
+						.addElements(new WrappedTextBlock(new PageRect(0, 0, 245, 70), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setAutoHeightEnabled(false).setId(2))
+						.addElements(new TextButton(0, 0, 195, 43).setMargins(0, 0, 0, 0).setPressedColor(0xFF8B61F2).setHorizontalAlignment(HorizontalAlignment.CENTER).setId(3)));
 	}
 
+	// layout for page with insights
+	private PageLayout createInsightLayout() {
+		return new PageLayout(
+				new FlowPanel(15, 0, 260, 120, FlowPanelOrientation.VERTICAL)
+						.addElements(new WrappedTextBlock(new PageRect(0, 0, 245, 30), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setColor(0xFF8B61F2).setId(4))
+						.addElements(new WrappedTextBlock(new PageRect(0, 30, 245, 61), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setId(5)));
+	}
+
+
+	// set up the content of the pages
+	// the order here matters
+	private void updatePages() throws BandIOException {
+		PageData togglePeriodPage = null;
+		if (onPeriod) {
+			// make server request here
+			togglePeriodPage = new PageData(pageId1, 0)
+					.update(new WrappedTextBlockData(2, "Day 2"))
+					.update(new TextButtonData(3, "Tap to End"));
+		} else {
+			togglePeriodPage = new PageData(pageId1, 0)
+					.update(new WrappedTextBlockData(2, "Click below if your period has started."))
+					.update(new TextButtonData(3, "Tap to Start"));
+		}
+		client.getTileManager().setPages(tileId,
+				new PageData(pageId2, 1)
+						.update(new WrappedTextBlockData(4, "Insights"))
+						.update(new WrappedTextBlockData(5, "Last Period: 6/28")),
+				togglePeriodPage);
+		appendToUI("Send button page data to tile page \n\n");
+
+
+	}
+
+
+
 	private void sendMessage(String message) throws BandIOException {
-		client.getNotificationManager().sendMessage(tileId, "Tile Message", message, new Date(), MessageFlags.SHOW_DIALOG);
+		client.getNotificationManager().showDialog(tileId, "Tile Message", message);
 		appendToUI(message + "\n");
+	}
+
+	private void periodButtonClicked() throws BandIOException {
+		onPeriod = !onPeriod;
+		// make server request here
+		updatePages();
 	}
 
 	private boolean getConnectedBandClient() throws InterruptedException, BandException {
