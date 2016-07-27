@@ -15,6 +15,7 @@ import java.io.*;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import org.json.*;
 
 /**
@@ -291,18 +292,92 @@ public class ServerCom
         }
     }
 
-    /**
-     *
-     */
-    public static String get_range(String username) {
-        return null;
-    }
+    public static ArrayList<PeriodListEntry> get_list(String username) {
+        HttpURLConnection connection = null;
 
+        String args = "get_list";
+
+        try {
+            //Create connection
+            URL url = new URL(HOST + "users/" + username);
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            // Execute request with no args
+            StringBuffer response = executeRequest (connection, args);
+            System.out.println(response.toString());
+            ArrayList<PeriodListEntry> periodArray = new ArrayList<PeriodListEntry>();
+            if((response.toString()).equals("null")) {
+                return periodArray;
+            }
+            System.out.println("Not null");
+            JSONArray respJson = new JSONArray(response.toString());
+            for (int i = 0; i < respJson.length(); i++)
+            {
+                JSONObject cur = respJson.getJSONObject(i);
+                String startDate = cur.getString("start");
+                String endDate = cur.getString("end");
+                int days = cur.getInt("days");
+                periodArray.add(new PeriodListEntry(
+                        startDate, endDate, days));
+            }
+            System.out.println(response.toString());
+            return periodArray;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+            // Ensure that the connection closes
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
     /**
      *
      */
-    public static String get_all(String username) {
-        return null;
+    public static ArrayList<PeriodCalendarEntry> get_all(String username) {
+        HttpURLConnection connection = null;
+
+        String args = "get_all";
+
+        try {
+            //Create connection
+            URL url = new URL(HOST + "users/" + username);
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            // Execute request with no args
+            StringBuffer response = executeRequest (connection, args);
+            System.out.println(response.toString());
+            JSONArray respJson = new JSONArray(response.toString());
+            ArrayList<PeriodCalendarEntry> periodArray = new ArrayList<PeriodCalendarEntry>();
+            for (int i = 0; i < respJson.length(); i++)
+            {
+                JSONObject cur = respJson.getJSONObject(i);
+                String date = cur.getString("date");
+                double temp = cur.getDouble("temp");
+                double rate = cur.getDouble("heart");
+                int mood = cur.getInt("mood");
+                boolean onPeriod = cur.getBoolean("period");
+                periodArray.add(new PeriodCalendarEntry(
+                        date, temp, rate, mood, onPeriod));
+            }
+            System.out.println(response.toString());
+            return periodArray;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+            // Ensure that the connection closes
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
+        }
     }
 
     /**
@@ -363,6 +438,40 @@ public class ServerCom
                 connection.disconnect();
             }
         }
+    }
+
+    public static PeriodCalendarEntry day_stats(String username) {
+        HttpURLConnection connection = null;
+
+        String args = "day_stats";
+
+        try {
+            //Create connection
+            URL url = new URL(HOST + "users/" + username);
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            // Execute request with no args
+            StringBuffer response = executeRequest (connection, args);
+            System.out.println(response.toString());
+            JSONObject cur = new JSONObject(response.toString());
+            String date = cur.getString("date");
+            double temp = cur.getDouble("temp");
+            double rate = cur.getDouble("heart");
+            int mood = cur.getInt("mood");
+            boolean onPeriod = cur.getBoolean("period");
+            return new PeriodCalendarEntry(date, temp, rate, mood, onPeriod);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+            // Ensure that the connection closes
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
+        }
+
     }
 //	/**
 //	 * Allow user to sign in and get their User ID
