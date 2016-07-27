@@ -3,9 +3,12 @@ package com.microsoft.band.monitor;
 import android.app.Activity;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -16,7 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LandingPageActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -31,6 +38,8 @@ public class LandingPageActivity extends Activity
      */
     private CharSequence mTitle;
 
+    private boolean isPeriodOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +53,28 @@ public class LandingPageActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        // Get all the info
+        // TODO
+        isPeriodOn = false;
+        // Change header text
+        TextView periodInfoText = (TextView) findViewById(R.id.periodInfoText);
+        int days = 2;
+        String infoHeader = isPeriodOn ?
+                getString(R.string.landing_periodon_prefix) + " " + days :
+                days + " " + getString(R.string.landing_periodoff_suffix);
+        periodInfoText.setText(infoHeader);
+
+        // Change button text
+        Button startEndPeriodButton = (Button) findViewById(R.id.startEndPeriodButton);
+        String buttonText = !isPeriodOn ?
+                getString(R.string.landing_periodon_button_text) :
+                getString(R.string.landing_periodoff_button_text);
+        startEndPeriodButton.setText(buttonText);
+
+        // Set button visibility
+        Button healthInfoButton = (Button) findViewById(R.id.healthInfoButton);
+        healthInfoButton.setVisibility(isPeriodOn ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -74,6 +105,91 @@ public class LandingPageActivity extends Activity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+    }
+
+    public void startEndPeriod(View view) {
+        // Change state
+        isPeriodOn = !isPeriodOn;
+
+        // Change visible text
+        TextView periodInfoText = (TextView) findViewById(R.id.periodInfoText);
+        int days = 2;
+        String infoHeader = isPeriodOn ?
+                getString(R.string.landing_periodon_prefix) + " " + days :
+                days + " " + getString(R.string.landing_periodoff_suffix);
+        periodInfoText.setText(infoHeader);
+
+        // Change button text
+        Button startEndPeriodButton = (Button) findViewById(R.id.startEndPeriodButton);
+        String buttonText = !isPeriodOn ?
+                getString(R.string.landing_periodon_button_text) :
+                getString(R.string.landing_periodoff_button_text);
+        startEndPeriodButton.setText(buttonText);
+
+        // Set button visibility
+        Button healthInfoButton = (Button) findViewById(R.id.healthInfoButton);
+        healthInfoButton.setVisibility(isPeriodOn ? View.VISIBLE : View.GONE);
+
+        // TODO call toggle
+    }
+
+    public void enterHealthInfo(View view) {
+        buildDialog();
+    }
+
+    // Helper
+    public void buildDialog() {
+        // Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(getString(R.string.landing_healthinfo_dialog_title));
+
+        // Inflate the view
+        final LayoutInflater inflater = getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.health_alert_dialog, null));
+
+        builder.setPositiveButton(R.string.ok, null);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        // Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+
+        // Show the dialog
+        dialog.show();
+        Button posButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        posButton.setOnClickListener(new CustomListener(dialog));
+    }
+
+    class CustomListener implements View.OnClickListener {
+        private final Dialog dialog;
+        public CustomListener(Dialog dialog) {
+            this.dialog = dialog;
+        }
+        @Override
+        public void onClick(View v) {
+            RatingBar ratingBar = (RatingBar) ((AlertDialog) dialog).findViewById(R.id.ratingBar);
+            int rating = (int) ratingBar.getRating();
+
+            // Catch empty rating
+            if (rating < 1) {
+                Toast.makeText(LandingPageActivity.this, getString(R.string.landing_healthinfo_dialog_error),
+                        Toast.LENGTH_SHORT).show();
+            }
+            // Else save and dismiss
+            else {
+                // TODO Call http code
+                dialog.dismiss();
+            }
+        }
+    }
+
+    // Helper
+    public void changeEmotion() {
+
     }
 
     /**

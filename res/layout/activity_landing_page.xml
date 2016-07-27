@@ -11,7 +11,51 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/periodInfoText"
+                android:layout_gravity="center_horizontal" />
+
+            <ImageView
+                android:layout_width="230dp"
+                android:layout_height="278dp"
+                android:id="@+id/monMon"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="fitCenter"
+                android:src="@drawable/nyancat"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/landing_healthinfo_button_text"
+                android:id="@+id/healthInfoButton"
+                android:layout_gravity="center_horizontal"
+                android:onClick="enterHealthInfo"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:id="@+id/startEndPeriodButton"
+                android:layout_gravity="center_horizontal"
+                android:onClick="startEndPeriod"/>
+
+
+        </LinearLayout>
+    </FrameLayout>
 
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->
