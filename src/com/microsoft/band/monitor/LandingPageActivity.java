@@ -3,12 +3,17 @@ package com.microsoft.band.monitor;
 import android.app.Activity;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -106,9 +111,16 @@ public class LandingPageActivity extends Activity
         actionBar.setTitle(mTitle);
     }
 
+    // Called when you start or end a period
     public void startEndPeriod(View view) {
         // Change state
         isPeriodOn = !isPeriodOn;
+
+        // TODO: uncomment if you want scheduled tasks
+//        if(isPeriodOn)
+//            scheduleAlarm();
+//        else
+//            cancelAlarm();
 
         ServerCom.toggle(username);
         updateTextAndButtons();
@@ -164,17 +176,17 @@ public class LandingPageActivity extends Activity
             }
             // Else save and dismiss
             else {
-                // TODO Call http code
                 dialog.dismiss();
             }
         }
     }
 
-    // Helper
+    // Helper to update the emotions
     public void updateEmotion() {
         ImageView monMon = (ImageView) findViewById(R.id.monMon);
 //        Map<String, Integer> map = new HashMap<String, Integer>();
 //        map.put("blah", );
+        // TODO: update for all emotions
         monMon.setImageResource(isPeriodOn ? R.drawable.p_default : R.drawable.np_default);
     }
 
@@ -284,4 +296,27 @@ public class LandingPageActivity extends Activity
         }
     }
 
+    // Setup a recurring alarm every half hour
+    public void scheduleAlarm() {
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                60*1000, pIntent);
+    }
+
+    public void cancelAlarm() {
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.cancel(pIntent);
+    }
 }
