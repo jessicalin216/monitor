@@ -43,12 +43,13 @@
                         android:orientation="vertical"
                         android:text="@string/calendar">
 
-                        <CalendarView
+                        <include
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:id="@+id/calendarView"
                             android:layout_gravity="center_horizontal"
-                            android:showWeekNumber="false"/>
+                            android:showWeekNumber="false"
+                            layout="@layout/control_calendar"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -57,11 +58,21 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:text="@string/list">
-
-                        <ListView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/list" />
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_height="fill_parent"
+                            android:layout_width="fill_parent">
+                            <ListView
+                                android:layout_weight="1"
+                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:id="@+id/dates"/>
+                            <ListView
+                                android:layout_weight="1"
+                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:id="@+id/duration"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
