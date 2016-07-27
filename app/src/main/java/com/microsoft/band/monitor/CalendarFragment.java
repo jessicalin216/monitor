@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -42,10 +43,12 @@ public class CalendarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    TabHost tabHost;
     ListView dates;
     ListView duration;
-    com.microsoft.band.monitor.CalendarFragment cv;
+
+    boolean isLeftListEnabled = true;
+    boolean isRightListEnabled = true;
+
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -193,6 +196,54 @@ public class CalendarFragment extends Fragment {
 
         dates.setAdapter(datesAdapter);
         duration.setAdapter(durationAdapter);
+
+        // IF YOU DO NOT OVERRIDE THIS
+        // ONLY THE ONE THAT IS TOUCHED WILL SCROLL OVER
+        dates.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
+        duration.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
+
+        dates.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // onScroll will be called and there will be an infinite loop.
+                // That's why i set a boolean value
+                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    isRightListEnabled = false;
+                } else if (scrollState == SCROLL_STATE_IDLE) {
+                    isRightListEnabled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
+                View c = view.getChildAt(0);
+                if (c != null && isLeftListEnabled) {
+                    duration.setSelectionFromTop(firstVisibleItem, c.getTop());
+                }
+            }
+        });
+
+        duration.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    isLeftListEnabled = false;
+                } else if (scrollState == SCROLL_STATE_IDLE) {
+                    isLeftListEnabled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
+                View c = view.getChildAt(0);
+                if (c != null && isRightListEnabled) {
+                    dates.setSelectionFromTop(firstVisibleItem, c.getTop());
+                }
+            }
+        });
         return view;
 
     }
