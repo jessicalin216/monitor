@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">monitor.</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="intent_key">new intent</string>
+    <string name="intent_value">TileEventReceiver</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="steps">Steps to use this app:\n
+        1. Pair your band with the phone\n
+        2. Make sure Microsoft Health is installed\n
+        3. Press the Start button\n
+        4. If the band is full, go to Microsoft Health to remove one tile, then repeat step 3\n
+        5. If it has not already been added, a new tile should be placed on your band\n
+        6. Enter the tile and test the buttons\n
+        7. Press the Stop button to end the demo and remove the tile.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <!-- Landing page strings -->
+    <string name="landing_howareyou_header">How are you feeling today?</string>
+    <string name="landing_periodstart_prefix">PERIOD START DATE WAS</string>
+    <string name="landing_projectedstart_prefix">PROJECTED START DATE IS</string>
+    <string name="landing_periodon_prefix">Day</string>
+    <string name="landing_periodoff_suffix">days left</string>
+    <string name="landing_periodon_button_text">START PERIOD</string>
+    <string name="landing_periodoff_button_text">END PERIOD</string>
+    <string name="landing_healthinfo_button_text">TAP TO ADD DETAILS</string>
+    <string name="landing_healthinfo_dialog_title">How are you feeling?</string>
+    <string name="landing_healthinfo_dialog_mesage">Rate how you\'re feeling right now. (1 is worse, 5 is best) </string>
+    <string name="landing_healthinfo_dialog_error">Your mood rating needs to be at least 1.</string>
+
+</resources>
