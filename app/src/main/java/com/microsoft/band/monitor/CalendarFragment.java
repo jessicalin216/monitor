@@ -99,9 +99,9 @@ public class CalendarFragment extends Fragment {
         spec.setIndicator("Calendar");
         host.addTab(spec);
 
-        spec = host.newTabSpec("List");
+        spec = host.newTabSpec("History");
         spec.setContent(R.id.tab2);
-        spec.setIndicator("List");
+        spec.setIndicator("History");
         host.addTab(spec);
 
         //Calendar View
@@ -162,12 +162,12 @@ public class CalendarFragment extends Fragment {
                 if(position %2 == 1)
                 {
                     // Set a background color for ListView regular row/item
-                    view.setBackgroundColor(Color.parseColor("#d7bef9"));
+                    view.setBackgroundColor(Color.parseColor("#E9DEEE"));
                 }
                 else
                 {
                     // Set the background color for alternate row/item
-                    view.setBackgroundColor(Color.parseColor("#c39ff4"));
+                    view.setBackgroundColor(Color.parseColor("#ffffff"));
                 }
                 return view;
             }
@@ -182,13 +182,13 @@ public class CalendarFragment extends Fragment {
                 if(position %2 == 1)
                 {
                     // Set a background color for ListView regular row/item
-                    view.setBackgroundColor(Color.parseColor("#d7bef9"));
+                    view.setBackgroundColor(Color.parseColor("#E9DEEE"));
 
                 }
                 else
                 {
                     // Set the background color for alternate row/item
-                    view.setBackgroundColor(Color.parseColor("#c39ff4"));
+                    view.setBackgroundColor(Color.parseColor("#ffffff"));
                 }
                 return view;
             }

@@ -197,12 +197,22 @@ public class HomeFragment extends Fragment {
 
     // Helper to update the emotions
     public void updateEmotion() {
-        ImageView monMon = (ImageView) mView.findViewById(R.id.monMon);
+        ImageView monMon_backdrop = (ImageView) mView.findViewById(R.id.monMon_backdrop);
+        ImageView monMon_face = (ImageView) mView.findViewById(R.id.monMon_face);
+        ImageView monMon_symptom1 = (ImageView) mView.findViewById(R.id.monMon_symptom1);
+        ImageView monMon_symptom2 = (ImageView) mView.findViewById(R.id.monMon_symptom2);
 //        Map<String, Integer> map = new HashMap<String, Integer>();
 //        map.put("blah", );
-        // TODO: update for all emotions
 
-        monMon.setImageResource(isPeriodOn ? R.drawable.p_default : R.drawable.np_default);
+        // TODO: update for all emotions
+        monMon_backdrop.setImageResource(isPeriodOn ? R.drawable.p_default : R.drawable.monitor_logo_full);
+        monMon_face.setImageResource(isPeriodOn ? R.drawable.p_default : R.drawable.np_default);
+        if (true) {
+            monMon_symptom1.setVisibility(View.VISIBLE);
+        }
+        if (true) {
+            monMon_symptom2.setVisibility(View.VISIBLE);
+        }
     }
 
     // Helper

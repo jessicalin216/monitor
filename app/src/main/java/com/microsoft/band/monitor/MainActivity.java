@@ -1,5 +1,6 @@
 package com.microsoft.band.monitor;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -22,8 +23,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.microsoft.band.BandClient;
 import com.microsoft.band.BandClientManager;
@@ -485,6 +488,32 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
                 exceptionMessage = "Unknown error occured: " + e.getMessage() + "\n";
+                break;
+        }
+    }
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkbox_cramps:
+                if (checked)
+                    Toast.makeText(getApplicationContext(), "meat", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(), "meh", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.checkbox_acne:
+                if (checked)
+                    Toast.makeText(getApplicationContext(), "meat", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(), "meh", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                if (checked)
+                    Toast.makeText(getApplicationContext(), "asdf", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(), "asdfd", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
