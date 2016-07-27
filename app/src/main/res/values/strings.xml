@@ -49,4 +49,7 @@
     <string name="landing_healthinfo_dialog_mesage">Rate how you\'re feeling right now. (1 is worse, 5 is best) </string>
     <string name="landing_healthinfo_dialog_error">Your mood rating needs to be at least 1.</string>
 
+    <!--Calendar-->
+    <string name="calendar">Calendar</string>
+    <string name="record">Period Record</string>
 </resources>
