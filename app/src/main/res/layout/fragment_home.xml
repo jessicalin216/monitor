@@ -107,8 +107,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:textSize="@dimen/text_size_large"
+                android:textColor="@color/caldroid_black"
                 android:id="@+id/periodInfoText"
                 android:layout_gravity="center_horizontal"
                 android:textStyle="bold" />
