@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity
         CalendarFragment.OnFragmentInteractionListener
 {
 
+    Fragment fragment = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
+        fragment = null;
         Class fragmentClass = HomeFragment.class;
 
         try {
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        navigationView.setCheckedItem(R.id.nav_home);
     }
 
     @Override
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
+        fragment = null;
         Class fragmentClass;
         switch(item.getItemId()) {
             case R.id.nav_home:
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentClass = CalendarFragment.class;
                 break;
             case R.id.nav_insights:
-                fragmentClass = ProfileFragment.class;
+                fragmentClass = HomeFragment.class;
                 break;
             case R.id.nav_alarms:
                 fragmentClass = ProfileFragment.class;
@@ -158,4 +161,17 @@ public class MainActivity extends AppCompatActivity
         //do nothing
 
     }
+
+    // For HomeFragment
+    // Called when you start or end a period
+    public void startEndPeriod(View view) {
+        ((HomeFragment)fragment).startEndPeriod(view);
+    }
+
+    public void enterHealthInfo(View view) {
+        ((HomeFragment)fragment).enterHealthInfo(view);
+    }
+
+
+
 }
