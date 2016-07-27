@@ -49,7 +49,7 @@
                     android:id="@+id/monMon_backdrop"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/np_default" />
+                    android:src="@drawable/noperiod" />
             </RelativeLayout>
 
             <RelativeLayout android:layout_width="230dp"
@@ -60,7 +60,7 @@
                     android:id="@+id/monMon_face"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/np_default" />
+                    android:src="@drawable/happy" />
             </RelativeLayout>
 
             <RelativeLayout android:layout_width="230dp"
@@ -71,7 +71,7 @@
                     android:id="@+id/monMon_symptom1"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/np_acne" />
+                    android:src="@drawable/acne" />
             </RelativeLayout>
 
             <RelativeLayout android:layout_width="230dp"
@@ -82,7 +82,7 @@
                     android:id="@+id/monMon_symptom2"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/np_cramps" />
+                    android:src="@drawable/cramps" />
             </RelativeLayout>
 
 
@@ -108,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/text_size_large"
                 android:id="@+id/periodInfoText"
                 android:layout_gravity="center_horizontal"
                 android:textStyle="bold" />

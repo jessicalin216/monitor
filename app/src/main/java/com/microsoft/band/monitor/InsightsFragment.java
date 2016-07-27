@@ -190,37 +190,16 @@ public class InsightsFragment extends Fragment {
 
 
 
-       // COPY "LIST" CODE HERE
-
-
-
-        // Tabs
-//        TabHost host = (TabHost) view.findViewById(R.id.tabHost);
-//        host.setup();
-//
-//        TabHost.TabSpec spec = host.newTabSpec("List");
-//        spec.setContent(R.id.tab1);
-//        spec.setIndicator("List");
-//        host.addTab(spec);
 
         // List View
         dates = (ListView)view.findViewById(R.id.dates);
         duration = (ListView) view.findViewById(R.id.duration);
 
-        String[] blah = new String[]{"2016-01-1 to 2016-01-6",
-                "2016-02-1 to 2016-02-6",
-                "2016-03-1 to 2016-03-6",
-                "2016-04-1 to 2016-04-6",
-                "2016-05-1 to 2016-05-6",
-                "2016-06-1 to 2016-06-6",
-                "2016-07-1 to 2016-07-6",
-                "2016-08-1 to 2016-08-6",
-                "2016-09-1 to 2016-09-6",
-                "2016-10-1 to 2016-10-6",
-                "2016-11-1 to 2016-11-6",
-                "2016-12-1 to 2016-12-6",};
-        String[] plah = new String[]{"6 days","6 days","6 days","6 days","6 days",
-                "6 days","6 days","6 days","6 days","6 days","6 days","6 days"};
+        String[] blah = new String[]{"Average Duration of Cycle",
+                "Most Recorded Symptoms",
+                "Average Body Temperature During Cycle",
+                "Average Recorded Happiness Level"};
+        String[] plah = new String[]{"6 days","Cramps","75","2.4/5"};
 
         ArrayAdapter<String> datesAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, blah){
@@ -231,12 +210,12 @@ public class InsightsFragment extends Fragment {
                 if(position %2 == 1)
                 {
                     // Set a background color for ListView regular row/item
-                    view.setBackgroundColor(Color.parseColor("#d7bef9"));
+                    view.setBackgroundColor(Color.parseColor("#E9DEEE"));
                 }
                 else
                 {
                     // Set the background color for alternate row/item
-                    view.setBackgroundColor(Color.parseColor("#c39ff4"));
+                    view.setBackgroundColor(Color.parseColor("#E9DEEE"));
                 }
                 return view;
             }
@@ -251,13 +230,13 @@ public class InsightsFragment extends Fragment {
                 if(position %2 == 1)
                 {
                     // Set a background color for ListView regular row/item
-                    view.setBackgroundColor(Color.parseColor("#d7bef9"));
+                    view.setBackgroundColor(Color.parseColor("#ffffff"));
 
                 }
                 else
                 {
                     // Set the background color for alternate row/item
-                    view.setBackgroundColor(Color.parseColor("#c39ff4"));
+                    view.setBackgroundColor(Color.parseColor("#ffffff"));
                 }
                 return view;
             }
@@ -313,12 +292,8 @@ public class InsightsFragment extends Fragment {
                 }
             }
         });
-
-
-
-
-
         return view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

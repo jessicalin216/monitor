@@ -17,7 +17,7 @@ public class SymptomEntry {
     public String toString() {
         return "Date = " + date +
                 "\nAcne = " + acne +
-                "\nCramps= " + crams +
+                "\nCramps= " + cramps +
                 "\nTired= " + tired;
     }
 }

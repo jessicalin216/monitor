@@ -138,7 +138,7 @@ public class CalendarFragment extends Fragment {
         dates = (ListView)view.findViewById(R.id.dates);
         duration = (ListView) view.findViewById(R.id.duration);
 
-        String[] blah = new String[]{"2016-01-1 to 2016-01-6",
+        String[] blah = new String[]{"Average Length",
                                      "2016-02-1 to 2016-02-6",
                                      "2016-03-1 to 2016-03-6",
                                      "2016-04-1 to 2016-04-6",
@@ -149,7 +149,7 @@ public class CalendarFragment extends Fragment {
                                      "2016-09-1 to 2016-09-6",
                                      "2016-10-1 to 2016-10-6",
                                      "2016-11-1 to 2016-11-6",
-                                     "2016-12-1 to 2016-12-6",};
+                                     "2016-12-1 to 2016-12-6"};
         String[] plah = new String[]{"6 days","6 days","6 days","6 days","6 days",
                 "6 days","6 days","6 days","6 days","6 days","6 days","6 days"};
 

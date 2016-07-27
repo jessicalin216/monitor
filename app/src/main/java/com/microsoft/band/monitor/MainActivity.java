@@ -46,14 +46,17 @@ import com.microsoft.band.tiles.pages.HorizontalAlignment;
 import com.microsoft.band.tiles.pages.PageData;
 import com.microsoft.band.tiles.pages.PageLayout;
 import com.microsoft.band.tiles.pages.PageRect;
+import com.microsoft.band.tiles.pages.ScrollFlowPanel;
 import com.microsoft.band.tiles.pages.TextButton;
 import com.microsoft.band.tiles.pages.TextButtonData;
 import com.microsoft.band.tiles.pages.WrappedTextBlock;
 import com.microsoft.band.tiles.pages.WrappedTextBlockData;
 import com.microsoft.band.tiles.pages.WrappedTextBlockFont;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity
 
     Fragment fragment = null;
     private String username = "";
+    private boolean onPeriod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +102,6 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         navigationView.setCheckedItem(R.id.nav_home);
-
-        Bundle extras = getIntent().getExtras();
-        String username = extras.getString("username");
 
         SharedPreferences prefs = getSharedPreferences("Monitor", MODE_PRIVATE);
         username = prefs.getString("username", "UNKNOWN");
@@ -142,6 +143,14 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+    public void goToBand(View view) {
+        Intent intent = new Intent(this, BandTileEventAppActivity.class);
+//        EditText editText = (EditText) findViewById(R.id.edit_message);
+//        String message = editText.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
 
     public void goToLogin(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
@@ -223,7 +232,6 @@ public class MainActivity extends AppCompatActivity
     private static final UUID pageId2 = UUID.fromString("c1234567-89ab-cdef-0123-456789abcd00");
 
     private float temp = 0;
-    private boolean onPeriod = false;
 
     BandSkinTemperatureEventListener mTempListener = new BandSkinTemperatureEventListener() {
         @Override
@@ -289,7 +297,10 @@ public class MainActivity extends AppCompatActivity
 //                      sendMessage("" + temp);
 //                  }
 
-                    sendMessage("TEST NOTIFICATION");
+                    if (onPeriod)
+                        sendMessage("You made it!");
+                    else
+                        sendMessage("Avoid caffeine in the next 2 days. :)");
                     togglePeriod();
                 } catch (BandException e) {
                     handleBandException(e);
@@ -411,9 +422,11 @@ public class MainActivity extends AppCompatActivity
     // layout for page with insights
     private PageLayout createInsightLayout() {
         return new PageLayout(
-                new FlowPanel(15, 0, 260, 120, FlowPanelOrientation.VERTICAL)
+                new ScrollFlowPanel(15, 0, 260, 150, FlowPanelOrientation.VERTICAL)
                         .addElements(new WrappedTextBlock(new PageRect(0, 0, 245, 30), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setColor(0xFF8B61F2).setId(4))
-                        .addElements(new WrappedTextBlock(new PageRect(0, 30, 245, 61), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setId(5)));
+                        .addElements(new WrappedTextBlock(new PageRect(0, 31, 245, 30), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setId(5))
+                        .addElements(new WrappedTextBlock(new PageRect(0, 60, 245, 30), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setId(6)));
+
     }
 
 
@@ -434,14 +447,13 @@ public class MainActivity extends AppCompatActivity
         client.getTileManager().setPages(tileId,
                 new PageData(pageId2, 1)
                         .update(new WrappedTextBlockData(4, "Insights"))
-                        .update(new WrappedTextBlockData(5, "Last Period: 6/28")),
+                        .update(new WrappedTextBlockData(5, "Last Period: 6/28"))
+                        .update(new WrappedTextBlockData(6, "Next Predicted Period: 123")),
                 togglePeriodPage);
     }
 
-
-
     private void sendMessage(String message) throws BandIOException {
-        client.getNotificationManager().showDialog(tileId, "Tile Message", message);
+        client.getNotificationManager().showDialog(tileId, "monitor.", message);
     }
 
     private void togglePeriod() throws BandIOException {
@@ -496,30 +508,5 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-    public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
 
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.checkbox_cramps:
-                if (checked)
-                    Toast.makeText(getApplicationContext(), "meat", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getApplicationContext(), "meh", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.checkbox_acne:
-                if (checked)
-                    Toast.makeText(getApplicationContext(), "meat", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getApplicationContext(), "meh", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                if (checked)
-                    Toast.makeText(getApplicationContext(), "asdf", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getApplicationContext(), "asdfd", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
 }
