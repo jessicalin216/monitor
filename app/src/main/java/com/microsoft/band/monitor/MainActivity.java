@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity
         ProfileFragment.OnFragmentInteractionListener,
         DebugFragment.OnFragmentInteractionListener,
         HomeFragment.OnFragmentInteractionListener,
-        CalendarFragment.OnFragmentInteractionListener
+        CalendarFragment.OnFragmentInteractionListener,
+        InsightsFragment.OnFragmentInteractionListener
 {
 
     Fragment fragment = null;
@@ -94,9 +96,12 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         navigationView.setCheckedItem(R.id.nav_home);
 
+        Bundle extras = getIntent().getExtras();
+        String username = extras.getString("username");
+
         SharedPreferences prefs = getSharedPreferences("Monitor", MODE_PRIVATE);
         username = prefs.getString("username", "UNKNOWN");
-
+        Log.d("LOGIN", "From MainActivity: " + username);
         onPeriod = ServerCom.status(username);
 
         new StartTask().execute();
@@ -167,7 +172,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentClass = CalendarFragment.class;
                 break;
             case R.id.nav_insights:
-                fragmentClass = HomeFragment.class;
+                fragmentClass = InsightsFragment.class;
                 break;
             case R.id.nav_alarms:
                 fragmentClass = ProfileFragment.class;
