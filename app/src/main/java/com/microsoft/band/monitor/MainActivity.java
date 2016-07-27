@@ -288,11 +288,10 @@ public class MainActivity extends AppCompatActivity
         if(extraString != null && extraString.equals(getString(R.string.intent_value))){
             if (intent.getAction() == TileEvent.ACTION_TILE_OPENED) {
                 TileEvent tileOpenData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
-                // TODO: get period data
 
-                ServerCom.toggle(username);
                 onPeriod = ServerCom.status(username);
                 updatePages();
+
             } else if (intent.getAction() == TileEvent.ACTION_TILE_BUTTON_PRESSED) {
                 TileButtonEvent buttonData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
                 try {
@@ -301,7 +300,7 @@ public class MainActivity extends AppCompatActivity
 //					}
 
                     sendMessage("TEST NOTIFICATION");
-                    periodButtonClicked();
+                    togglePeriod();
                 } catch (BandException e) {
                     handleBandException(e);
                 } catch (Exception e) {
@@ -457,10 +456,11 @@ public class MainActivity extends AppCompatActivity
         client.getNotificationManager().showDialog(tileId, "Tile Message", message);
     }
 
-    private void periodButtonClicked() throws BandIOException {
-        onPeriod = !onPeriod;
-        // make server request here
+    private void togglePeriod() throws BandIOException {
+        ServerCom.toggle(username);
+        onPeriod = ServerCom.status(username);
         updatePages();
+
     }
 
     private boolean getConnectedBandClient() throws InterruptedException, BandException {

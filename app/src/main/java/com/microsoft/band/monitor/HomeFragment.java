@@ -127,8 +127,7 @@ public class HomeFragment extends Fragment {
 
     // Called when you start or end a period
     public void startEndPeriod(View view) {
-        // Change state
-        isPeriodOn = !isPeriodOn;
+
 
         // TODO: uncomment if you want scheduled tasks
 //        if(isPeriodOn)
@@ -137,6 +136,7 @@ public class HomeFragment extends Fragment {
 //            cancelAlarm();
 
         ServerCom.toggle(username);
+        isPeriodOn = ServerCom.status(username);
         updateTextAndButtons();
 
 

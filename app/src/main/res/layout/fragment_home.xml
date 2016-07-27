@@ -40,7 +40,7 @@
             android:id="@+id/monMon"
             android:layout_gravity="center_horizontal"
             android:scaleType="fitCenter"
-            android:src="@drawable/p_default_small" />
+            android:src="@drawable/np_default" />
 
         <LinearLayout
             android:orientation="vertical"
