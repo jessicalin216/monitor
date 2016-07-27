@@ -1,12 +1,25 @@
 package com.microsoft.band.monitor;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TabHost;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+
+import com.roomorama.caldroid.CaldroidFragment;
+import java.util.*;
 
 
 /**
@@ -29,9 +42,15 @@ public class CalendarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    TabHost tabHost;
+    ListView dates;
+    ListView duration;
+    com.microsoft.band.monitor.CalendarFragment cv;
+
     public CalendarFragment() {
         // Required empty public constructor
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -58,13 +77,124 @@ public class CalendarFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendar, container, false);
+        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
+
+        // Tabs
+        TabHost host = (TabHost) view.findViewById(R.id.tabHost);
+        host.setup();
+
+        TabHost.TabSpec spec = host.newTabSpec("Calendar");
+        spec.setContent(R.id.tab1);
+        spec.setIndicator("Calendar");
+        host.addTab(spec);
+
+        spec = host.newTabSpec("List");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator("List");
+        host.addTab(spec);
+
+        //Calendar View
+        CaldroidFragment caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        caldroidFragment.setArguments(args);
+
+        FragmentTransaction t = getFragmentManager().beginTransaction();
+        t.replace(R.id.calendarView, caldroidFragment);
+        t.commit();
+
+        Resources res = getResources();
+        Drawable d = res.getDrawable(R.drawable.purple_square_hi);
+
+        for(int m=0; m <= 11; m++){
+            Date start = new Date(116, m, 1);
+            Date end = new Date(116, m, 6);
+
+            caldroidFragment.setSelectedDates(start, end);
+
+            for(int i = 1; i <= 6; i++) {
+                Date hold = new Date(116, m, i);
+                caldroidFragment.setBackgroundDrawableForDate(d, hold);
+            }
+
+
+        }
+
+
+        // List View
+        dates = (ListView)view.findViewById(R.id.dates);
+        duration = (ListView) view.findViewById(R.id.duration);
+
+        String[] blah = new String[]{"2016-01-1 to 2016-01-6",
+                                     "2016-02-1 to 2016-02-6",
+                                     "2016-03-1 to 2016-03-6",
+                                     "2016-04-1 to 2016-04-6",
+                                     "2016-05-1 to 2016-05-6",
+                                     "2016-06-1 to 2016-06-6",
+                                     "2016-07-1 to 2016-07-6",
+                                     "2016-08-1 to 2016-08-6",
+                                     "2016-09-1 to 2016-09-6",
+                                     "2016-10-1 to 2016-10-6",
+                                     "2016-11-1 to 2016-11-6",
+                                     "2016-12-1 to 2016-12-6",};
+        String[] plah = new String[]{"6 days","6 days","6 days","6 days","6 days",
+                "6 days","6 days","6 days","6 days","6 days","6 days","6 days"};
+
+        ArrayAdapter<String> datesAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, blah){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+                if(position %2 == 1)
+                {
+                    // Set a background color for ListView regular row/item
+                    view.setBackgroundColor(Color.parseColor("#d7bef9"));
+                }
+                else
+                {
+                    // Set the background color for alternate row/item
+                    view.setBackgroundColor(Color.parseColor("#c39ff4"));
+                }
+                return view;
+            }
+        };
+
+        ArrayAdapter<String> durationAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, plah){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+                if(position %2 == 1)
+                {
+                    // Set a background color for ListView regular row/item
+                    view.setBackgroundColor(Color.parseColor("#d7bef9"));
+
+                }
+                else
+                {
+                    // Set the background color for alternate row/item
+                    view.setBackgroundColor(Color.parseColor("#c39ff4"));
+                }
+                return view;
+            }
+        };
+
+        dates.setAdapter(datesAdapter);
+        duration.setAdapter(durationAdapter);
+        return view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
