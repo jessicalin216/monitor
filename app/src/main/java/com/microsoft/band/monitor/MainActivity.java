@@ -133,19 +133,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            new StopTask().execute();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    /** Called when the user clicks the Hello World button */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, BandTileEventAppActivity.class);
-//        EditText editText = (EditText) findViewById(R.id.edit_message);
-//        String message = editText.getText().toString();
-//        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
     }
 
 
@@ -198,7 +189,7 @@ public class MainActivity extends AppCompatActivity
                         .replace(R.id.flContent, fragment)
                         .commit();
             }
-        }, 275);
+        }, 250);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -215,10 +206,7 @@ public class MainActivity extends AppCompatActivity
 
     // For HomeFragment
     // Called when you start or end a period
-    public void startEndPeriod(View view) {
-
-        ((HomeFragment)fragment).startEndPeriod(view);
-    }
+    public void startEndPeriod(View view) { ((HomeFragment)fragment).startEndPeriod(view);}
 
     public void enterHealthInfo(View view) {
         ((HomeFragment)fragment).enterHealthInfo(view);
@@ -227,10 +215,6 @@ public class MainActivity extends AppCompatActivity
     // BAND STUFF
 
     private BandClient client = null;
-    private Button btnStop;
-    private Button btnStart;
-    private TextView txtStatus;
-    private ScrollView scrollView;
     private static final UUID tileId = UUID.fromString("cc0D508F-70A3-47D4-BBA3-812BADB1F8Aa");
     private static final UUID pageId1 = UUID.fromString("b1234567-89ab-cdef-0123-456789abcd00");
     private static final UUID pageId2 = UUID.fromString("c1234567-89ab-cdef-0123-456789abcd00");
@@ -293,16 +277,14 @@ public class MainActivity extends AppCompatActivity
         if(extraString != null && extraString.equals(getString(R.string.intent_value))){
             if (intent.getAction() == TileEvent.ACTION_TILE_OPENED) {
                 TileEvent tileOpenData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
-
                 onPeriod = ServerCom.status(username);
                 updatePages();
-
             } else if (intent.getAction() == TileEvent.ACTION_TILE_BUTTON_PRESSED) {
                 TileButtonEvent buttonData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
                 try {
-//					if(temp != 0) {
-//						sendMessage("" + temp);
-//					}
+//                  if(temp != 0) {
+//                      sendMessage("" + temp);
+//                  }
 
                     sendMessage("TEST NOTIFICATION");
                     togglePeriod();
@@ -399,7 +381,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
-		/* Set the options */
+        /* Set the options */
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -439,7 +421,7 @@ public class MainActivity extends AppCompatActivity
         if (onPeriod) {
             // make server request here
             togglePeriodPage = new PageData(pageId1, 0)
-                    .update(new WrappedTextBlockData(2, "Day 2"))
+                    .update(new WrappedTextBlockData(2, "Day " + ServerCom.day(username)))
                     .update(new TextButtonData(3, "Tap to End"));
         } else {
             togglePeriodPage = new PageData(pageId1, 0)
@@ -451,8 +433,6 @@ public class MainActivity extends AppCompatActivity
                         .update(new WrappedTextBlockData(4, "Insights"))
                         .update(new WrappedTextBlockData(5, "Last Period: 6/28")),
                 togglePeriodPage);
-
-
     }
 
 
@@ -465,6 +445,17 @@ public class MainActivity extends AppCompatActivity
         ServerCom.toggle(username);
         onPeriod = ServerCom.status(username);
         updatePages();
+
+        try {
+            fragment = (Fragment) (HomeFragment.class).newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, fragment)
+                        .commit();
 
     }
 
@@ -502,5 +493,4 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-
 }
