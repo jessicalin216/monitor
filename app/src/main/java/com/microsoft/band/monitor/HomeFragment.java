@@ -217,10 +217,10 @@ public class HomeFragment extends Fragment {
         // TODO: update for all emotions
         monMon_backdrop.setImageResource(isPeriodOn ? R.drawable.period : R.drawable.noperiod);
         monMon_face.setImageResource(isPeriodOn ? R.drawable.tired : R.drawable.happy);
-        if (true) { // acne
+        if (arr.acne) { // acne
             monMon_symptom1.setVisibility(View.VISIBLE); //
         }
-        if (true) { // cramps
+        if (arr.cramps) { // cramps
             monMon_symptom2.setVisibility(View.VISIBLE);
         }
     }

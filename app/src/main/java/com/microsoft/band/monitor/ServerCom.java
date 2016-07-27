@@ -355,8 +355,7 @@ public class ServerCom
             // Execute request with no args
             StringBuffer response = executeRequest (connection, args);
             System.out.println(response.toString());
-            JSONArray respJson = new JSONArray(response.toString());
-            JSONObject cur = respJson.getJSONObject();
+            JSONObject cur = new JSONObject(response.toString());
             String date = cur.getString("date");
             boolean acne = cur.getBoolean("acne");
             boolean cramps = cur.getBoolean("cramps");
