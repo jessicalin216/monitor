@@ -16,6 +16,7 @@
             android:title="Alarms" />
     </group>
 
+    <item android:title="Configure">
         <menu>
             <item
                 android:id="@+id/nav_profile"
@@ -27,5 +28,7 @@
                 android:id="@+id/nav_debug"
                 android:title="Debug" />
         </menu>
+    </item>
+
 
 </menu>
