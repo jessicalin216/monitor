@@ -23,10 +23,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/periodInfoText"
-                android:layout_gravity="center_horizontal" />
+                android:text="@string/landing_howareyou_header"
+                android:id="@+id/howAreYou"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="@string/landing_healthinfo_button_text"
+                android:id="@+id/healthInfoButton"
+                android:layout_gravity="center_horizontal"
+                android:onClick="enterHealthInfo"
+                android:background="@android:color/transparent"
+                android:textColor="#843C96"
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="230dp"
@@ -34,25 +49,44 @@
                 android:id="@+id/monMon"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitCenter"
-                android:src="@drawable/np_default"
-                />
+                android:src="@drawable/np_default" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/landing_healthinfo_button_text"
-                android:id="@+id/healthInfoButton"
-                android:layout_gravity="center_horizontal"
-                android:onClick="enterHealthInfo"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:gravity="center"
+                android:background="#E9DEEE"
+                >
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:id="@+id/startEndPeriodButton"
-                android:layout_gravity="center_horizontal"
-                android:onClick="startEndPeriod"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/periodInfoDate"
+                    android:layout_gravity="center_horizontal" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/periodInfoText"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:id="@+id/startEndPeriodButton"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="startEndPeriod"
+                    android:background="#843C96"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"/>
+            </LinearLayout>
 
         </LinearLayout>
     </FrameLayout>

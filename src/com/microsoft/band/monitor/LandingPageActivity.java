@@ -22,9 +22,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class LandingPageActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -41,6 +48,7 @@ public class LandingPageActivity extends Activity
 
     private boolean isPeriodOn;
     private String username;
+    private int days;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,27 +73,7 @@ public class LandingPageActivity extends Activity
         username = getIntent().getStringExtra(LoginActivity.EXTRA_MESSAGE);
 
         isPeriodOn = ServerCom.status(username);
-
-        // Change header text
-        TextView periodInfoText = (TextView) findViewById(R.id.periodInfoText);
-        int days = 2;
-        String infoHeader = isPeriodOn ?
-                getString(R.string.landing_periodon_prefix) + " " + days :
-                days + " " + getString(R.string.landing_periodoff_suffix);
-        periodInfoText.setText(infoHeader);
-
-        // Change button text
-        Button startEndPeriodButton = (Button) findViewById(R.id.startEndPeriodButton);
-        String buttonText = !isPeriodOn ?
-                getString(R.string.landing_periodon_button_text) :
-                getString(R.string.landing_periodoff_button_text);
-        startEndPeriodButton.setText(buttonText);
-
-        // Set button visibility
-        Button healthInfoButton = (Button) findViewById(R.id.healthInfoButton);
-        healthInfoButton.setVisibility(isPeriodOn ? View.VISIBLE : View.GONE);
-
-
+        updateTextAndButtons();
     }
 
     @Override
@@ -122,27 +110,10 @@ public class LandingPageActivity extends Activity
         // Change state
         isPeriodOn = !isPeriodOn;
 
-        // Change visible text
-        TextView periodInfoText = (TextView) findViewById(R.id.periodInfoText);
-        int days = 2;
-        String infoHeader = isPeriodOn ?
-                getString(R.string.landing_periodon_prefix) + " " + days :
-                days + " " + getString(R.string.landing_periodoff_suffix);
-        periodInfoText.setText(infoHeader);
-
-        // Change button text
-        Button startEndPeriodButton = (Button) findViewById(R.id.startEndPeriodButton);
-        String buttonText = !isPeriodOn ?
-                getString(R.string.landing_periodon_button_text) :
-                getString(R.string.landing_periodoff_button_text);
-        startEndPeriodButton.setText(buttonText);
-
-        // Set button visibility
-        Button healthInfoButton = (Button) findViewById(R.id.healthInfoButton);
-        healthInfoButton.setVisibility(isPeriodOn ? View.VISIBLE : View.GONE);
-
-        // TODO call toggle
         ServerCom.toggle(username);
+        updateTextAndButtons();
+
+
     }
 
     public void enterHealthInfo(View view) {
@@ -200,8 +171,77 @@ public class LandingPageActivity extends Activity
     }
 
     // Helper
-    public void changeEmotion() {
+    public void updateEmotion() {
+        ImageView monMon = (ImageView) findViewById(R.id.monMon);
+//        Map<String, Integer> map = new HashMap<String, Integer>();
+//        map.put("blah", );
+        monMon.setImageResource(isPeriodOn ? R.drawable.p_default : R.drawable.np_default);
+    }
 
+    // Helper
+    public void updateTextAndButtons() {
+        days = isPeriodOn ? ServerCom.day(username) : getNextPeriod(ServerCom.predict(username).replaceAll("\"",""));
+
+        // Change visible text
+        TextView periodStartText = (TextView) findViewById(R.id.periodInfoDate);
+        // Create today's date
+        Date today = new Date();
+        String startDate = today.getYear()+1900 + "-" + (today.getMonth() + 1) + "-" + (today.getDate() - days);
+        String startHeader = isPeriodOn ?
+                getString(R.string.landing_periodstart_prefix) + " " + getMonthDate(startDate) :
+                getString(R.string.landing_projectedstart_prefix) + " " + getMonthDate(ServerCom.predict(username).replaceAll("\"",""));
+        periodStartText.setText(startHeader);
+
+        TextView periodInfoText = (TextView) findViewById(R.id.periodInfoText);
+        String infoHeader = isPeriodOn ?
+                getString(R.string.landing_periodon_prefix) + " " + days :
+                days + " " + getString(R.string.landing_periodoff_suffix);
+        periodInfoText.setText(infoHeader);
+
+        // Change button text
+        Button startEndPeriodButton = (Button) findViewById(R.id.startEndPeriodButton);
+        String buttonText = !isPeriodOn ?
+                getString(R.string.landing_periodon_button_text) :
+                getString(R.string.landing_periodoff_button_text);
+        startEndPeriodButton.setText(buttonText);
+
+        // Set button visibility
+        Button healthInfoButton = (Button) findViewById(R.id.healthInfoButton);
+        healthInfoButton.setVisibility(isPeriodOn ? View.VISIBLE : View.INVISIBLE);
+
+        // Update MonMon
+        updateEmotion();
+    }
+
+    public long dateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+    }
+
+    public int getNextPeriod(String date) {
+        // Change string into a date
+        if(date.contains("na"))
+            return 0;
+        String[] splitStr = date.split("-");
+        int year = Integer.parseInt(splitStr[0]) - 1900;
+        int month = Integer.parseInt(splitStr[1]) - 1;
+        int day = Integer.parseInt(splitStr[2]);
+        Date nextDate = new Date(year, month, day);
+        Date today = new Date();
+        return (int) dateDiff(today, nextDate, TimeUnit.DAYS);
+    }
+
+    public String getMonthDate(String date) {
+        // Change string into a date
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd");
+        if(date.contains("na"))
+            return "";
+        String[] splitStr = date.split("-");
+        int year = Integer.parseInt(splitStr[0]) - 1900;
+        int month = Integer.parseInt(splitStr[1]) - 1;
+        int day = Integer.parseInt(splitStr[2]);
+        Date nextDate = new Date(year, month, day);
+        return sdf.format(nextDate).toUpperCase();
     }
 
     /**
