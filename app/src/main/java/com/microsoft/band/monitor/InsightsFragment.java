@@ -91,8 +91,11 @@ public class InsightsFragment extends Fragment {
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
 
         DataPoint[] dataPoints = new DataPoint[rawData.size()];
+        DataPoint[] dataPoints2 = new DataPoint[rawData.size()];
+        DataPoint[] dataPoints3 = new DataPoint[rawData.size()];
             for (int i = 0; i < rawData.size(); i++) {
                 String dateStr = rawData.get(i).date;
+                Log.d("INSIGHTS2", dateStr);
                 dateStr = dateStr.replace("\"", "");
                 String [] dateArr = dateStr.split("-", 0);
                 if(dateArr.length != 3) {
@@ -104,18 +107,22 @@ public class InsightsFragment extends Fragment {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
                 Date date = null;
                 try {
-                    Log.d("INSIGHTS", dateStr);
                     date = formatter.parse(dateStr);
-                    Log.d("INSIGHTS", date.toString());
                 } catch (ParseException e) {
                     Log.d("ERRORREKT", e.getMessage());
                 }
                 dataPoints[i] = new DataPoint(date, rawData.get(i).mood);
+                dataPoints2[i] = new DataPoint(date, rawData.get(i).heart);
+                dataPoints3[i] = new DataPoint(date, rawData.get(i).temp);
             }
 
-            LineGraphSeries<DataPoint> series2 = new LineGraphSeries<DataPoint>(dataPoints);
+            LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPoints);
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<DataPoint>(dataPoints2);
+        LineGraphSeries<DataPoint> series3 = new LineGraphSeries<DataPoint>(dataPoints3);
             //graph.addSeries(series2);
-            series2.setTitle("bar");
+            series.setTitle("Mood");
+        series2.setTitle("Heart Rate");
+        series3.setTitle("Temperature");
 
 //        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
 //                new DataPoint(0, 1),
@@ -126,37 +133,29 @@ public class InsightsFragment extends Fragment {
 //        });
 
         // generate Dates
-        Calendar calendar = Calendar.getInstance();
-        Date d1 = calendar.getTime();
-        calendar.add(Calendar.DATE, 1);
-        Date d2 = calendar.getTime();
-        calendar.add(Calendar.DATE, 1);
-        Date d3 = calendar.getTime();
-        Log.d("INSIGHTS", d1.toString());
-        Log.d("INSIGHTS", d2.toString());
-        Log.d("INSIGHTS", d3.toString());
+
 
 
 // you can directly pass Date objects to DataPoint-Constructor
 // this will convert the Date to double via Date#getTime()
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(d1, 1),
-                new DataPoint(d2, 5),
-                new DataPoint(d3, 3)
-        });
+//        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+//                new DataPoint(d1, 1),
+//                new DataPoint(d2, 5),
+//                new DataPoint(d3, 3)
+//        });
 
         graph.addSeries(series);
+        graph.addSeries(series2);
+        graph.addSeries(series3);
+
 
 
         //graph.addSeries(series);
-        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.VERTICAL);// It will remove the background grids
+        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);// It will remove the background grids
         graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
 
-
-        graph.getViewport().setMinX(20);
-        graph.getViewport().setMaxX(40);
         graph.getViewport().setMinY(0.0);
-        graph.getViewport().setMaxY(5.0);
+        graph.getViewport().setMaxY(50.0);
 
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
@@ -167,7 +166,8 @@ public class InsightsFragment extends Fragment {
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
 
-        //series.setColor(Color.RED);
+        series2.setColor(Color.RED);
+        series3.setColor(Color.GREEN);
         return view;
     }
 
