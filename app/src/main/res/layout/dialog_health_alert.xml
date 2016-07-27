@@ -18,4 +18,37 @@
         android:id="@+id/ratingBar"
         android:layout_gravity="center_horizontal"
         android:stepSize="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="What symptoms do you feel?"
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal" />
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical">
+    <CheckBox android:id="@+id/checkbox_cramps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cramps"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox android:id="@+id/checkbox_tired"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tired"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox android:id="@+id/checkbox_acne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Acne"
+        android:onClick="onCheckboxClicked"/>
+</LinearLayout>
+
+
 </LinearLayout>

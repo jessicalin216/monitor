@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -183,6 +184,13 @@ public class HomeFragment extends Fragment {
             RatingBar ratingBar = (RatingBar) ((AlertDialog) dialog).findViewById(R.id.ratingBar);
             int rating = (int) ratingBar.getRating();
 
+            CheckBox c_acne = (CheckBox) ((AlertDialog) dialog).findViewById(R.id.checkbox_acne);
+            boolean acne = c_acne.isChecked();
+            CheckBox c_cramps = (CheckBox) ((AlertDialog) dialog).findViewById(R.id.checkbox_cramps);
+            boolean cramps = c_cramps.isChecked();
+            CheckBox c_tired = (CheckBox) ((AlertDialog) dialog).findViewById(R.id.checkbox_tired);
+            boolean tired = c_tired.isChecked();
+
             // Catch empty rating
             if (rating < 1) {
                 Toast.makeText(getActivity(), getString(R.string.landing_healthinfo_dialog_error),
@@ -190,6 +198,8 @@ public class HomeFragment extends Fragment {
             }
             // Else save and dismiss
             else {
+                ServerCom.sendMoodData(username, rating);
+                ServerCom.sendSymptomInfo(username, acne, cramps, tired);
                 dialog.dismiss();
             }
         }
@@ -197,12 +207,22 @@ public class HomeFragment extends Fragment {
 
     // Helper to update the emotions
     public void updateEmotion() {
-        ImageView monMon = (ImageView) mView.findViewById(R.id.monMon);
-//        Map<String, Integer> map = new HashMap<String, Integer>();
-//        map.put("blah", );
-        // TODO: update for all emotions
+        SymptomEntry arr = ServerCom.get_symptoms(username);
+        // acne, cramps, tired
+        ImageView monMon_backdrop = (ImageView) mView.findViewById(R.id.monMon_backdrop);
+        ImageView monMon_face = (ImageView) mView.findViewById(R.id.monMon_face);
+        ImageView monMon_symptom1 = (ImageView) mView.findViewById(R.id.monMon_symptom1);
+        ImageView monMon_symptom2 = (ImageView) mView.findViewById(R.id.monMon_symptom2);
 
-        monMon.setImageResource(isPeriodOn ? R.drawable.p_default : R.drawable.np_default);
+        // TODO: update for all emotions
+        monMon_backdrop.setImageResource(isPeriodOn ? R.drawable.period : R.drawable.noperiod);
+        monMon_face.setImageResource(isPeriodOn ? R.drawable.tired : R.drawable.happy);
+        if (true) { // acne
+            monMon_symptom1.setVisibility(View.VISIBLE); //
+        }
+        if (true) { // cramps
+            monMon_symptom2.setVisibility(View.VISIBLE);
+        }
     }
 
     // Helper
