@@ -335,6 +335,53 @@ public class ServerCom
             }
         }
     }
+
+
+    /**
+     *
+     */
+    public static ArrayList<SymptomEntry> get_symptoms(String username) {
+        HttpURLConnection connection = null;
+
+        String args = "get_symptoms";
+
+        try {
+            //Create connection
+            URL url = new URL(HOST + "users/" + username);
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            // Execute request with no args
+            StringBuffer response = executeRequest (connection, args);
+            System.out.println(response.toString());
+            JSONArray respJson = new JSONArray(response.toString());
+            ArrayList<SymptomEntry> symptomArray = new ArrayList<SymptomEntry>();
+            for (int i = 0; i < respJson.length(); i++)
+            {
+                JSONObject cur = respJson.getJSONObject(i);
+                String date = cur.getString("date");
+                boolean acne = cur.getBoolean("acne");
+                boolean cramps = cur.getBoolean("cramps");
+                boolean tired = cur.getBoolean("tired");
+                symptomArray.add(new SymptomEntry(
+                        date, acne, cramps, tired));
+            }
+            System.out.println(response.toString());
+            return symptomArray;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+            // Ensure that the connection closes
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+
     /**
      *
      */
@@ -389,6 +436,36 @@ public class ServerCom
         HttpURLConnection connection = null;
 
         String args = "sensor=" + temperature + "," + heartRate;
+
+        try {
+            //Create connection
+            URL url = new URL(HOST + "users/" + username);
+            connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            // Execute request with no args
+            StringBuffer response = executeRequest (connection, args);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Ensure that the connection closes
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+    
+    /**
+     * Allows the user to send symptom info to the server
+     */
+    public static void sendSymptomInfo(String username, boolean acne, boolean cramps, boolean tired) {
+
+        HttpURLConnection connection = null;
+
+        String args = "symptoms=" + acne + "," + cramps + "," + tired;
 
         try {
             //Create connection
