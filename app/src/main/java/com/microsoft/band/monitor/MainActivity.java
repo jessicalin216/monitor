@@ -1,8 +1,13 @@
 package com.microsoft.band.monitor;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -16,6 +21,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.microsoft.band.BandClient;
+import com.microsoft.band.BandClientManager;
+import com.microsoft.band.BandException;
+import com.microsoft.band.BandIOException;
+import com.microsoft.band.BandInfo;
+import com.microsoft.band.ConnectionState;
+import com.microsoft.band.sensors.BandSkinTemperatureEvent;
+import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
+import com.microsoft.band.tiles.BandTile;
+import com.microsoft.band.tiles.TileButtonEvent;
+import com.microsoft.band.tiles.TileEvent;
+import com.microsoft.band.tiles.pages.FlowPanel;
+import com.microsoft.band.tiles.pages.FlowPanelOrientation;
+import com.microsoft.band.tiles.pages.HorizontalAlignment;
+import com.microsoft.band.tiles.pages.PageData;
+import com.microsoft.band.tiles.pages.PageLayout;
+import com.microsoft.band.tiles.pages.PageRect;
+import com.microsoft.band.tiles.pages.TextButton;
+import com.microsoft.band.tiles.pages.TextButtonData;
+import com.microsoft.band.tiles.pages.WrappedTextBlock;
+import com.microsoft.band.tiles.pages.WrappedTextBlockData;
+import com.microsoft.band.tiles.pages.WrappedTextBlockFont;
+
+import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -26,6 +60,7 @@ public class MainActivity extends AppCompatActivity
 {
 
     Fragment fragment = null;
+    private String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +93,13 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         navigationView.setCheckedItem(R.id.nav_home);
+
+        SharedPreferences prefs = getSharedPreferences("Monitor", MODE_PRIVATE);
+        username = prefs.getString("username", "UNKNOWN");
+
+        onPeriod = ServerCom.status(username);
+
+        new StartTask().execute();
     }
 
     @Override
@@ -116,7 +158,7 @@ public class MainActivity extends AppCompatActivity
 
         // Handle navigation view item clicks here.
         fragment = null;
-        Class fragmentClass;
+        final Class fragmentClass;
         switch(item.getItemId()) {
             case R.id.nav_home:
                 fragmentClass = HomeFragment.class;
@@ -133,9 +175,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_profile:
                 fragmentClass = ProfileFragment.class;
                 break;
-            case R.id.nav_settings:
-                fragmentClass = ProfileFragment.class;
-                break;
             default:
                 fragmentClass = DebugFragment.class;
         }
@@ -146,9 +185,16 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, fragment)
+                        .commit();
+            }
+        }, 275);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -165,6 +211,7 @@ public class MainActivity extends AppCompatActivity
     // For HomeFragment
     // Called when you start or end a period
     public void startEndPeriod(View view) {
+
         ((HomeFragment)fragment).startEndPeriod(view);
     }
 
@@ -172,6 +219,283 @@ public class MainActivity extends AppCompatActivity
         ((HomeFragment)fragment).enterHealthInfo(view);
     }
 
+    // BAND STUFF
 
+    private BandClient client = null;
+    private Button btnStop;
+    private Button btnStart;
+    private TextView txtStatus;
+    private ScrollView scrollView;
+    private static final UUID tileId = UUID.fromString("cc0D508F-70A3-47D4-BBA3-812BADB1F8Aa");
+    private static final UUID pageId1 = UUID.fromString("b1234567-89ab-cdef-0123-456789abcd00");
+    private static final UUID pageId2 = UUID.fromString("c1234567-89ab-cdef-0123-456789abcd00");
+
+    private float temp = 0;
+    private boolean onPeriod = false;
+
+    BandSkinTemperatureEventListener mTempListener = new BandSkinTemperatureEventListener() {
+        @Override
+        public void onBandSkinTemperatureChanged(BandSkinTemperatureEvent event) {
+            temp = event.getTemperature();
+        }
+    };
+
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        try {
+            processIntent(intent);
+        } catch (BandIOException e) {
+            e.printStackTrace();
+        }
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(getIntent() != null && getIntent().getExtras() != null){
+            try {
+                processIntent(getIntent());
+            } catch (BandIOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        new StopTask().execute();
+        if (client != null) {
+            try {
+                client.disconnect().await();
+            } catch (InterruptedException e) {
+                // Do nothing as this is happening during destroy
+            } catch (BandException e) {
+                // Do nothing as this is happening during destroy
+            }
+        }
+        super.onDestroy();
+    }
+
+    //method for seeing what is going on with the band
+    private void processIntent(Intent intent) throws BandIOException {
+        String extraString = intent.getStringExtra(getString(R.string.intent_key));
+
+        if(extraString != null && extraString.equals(getString(R.string.intent_value))){
+            if (intent.getAction() == TileEvent.ACTION_TILE_OPENED) {
+                TileEvent tileOpenData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
+                // TODO: get period data
+
+                ServerCom.toggle(username);
+                onPeriod = ServerCom.status(username);
+                updatePages();
+            } else if (intent.getAction() == TileEvent.ACTION_TILE_BUTTON_PRESSED) {
+                TileButtonEvent buttonData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
+                try {
+//					if(temp != 0) {
+//						sendMessage("" + temp);
+//					}
+
+                    sendMessage("TEST NOTIFICATION");
+                    periodButtonClicked();
+                } catch (BandException e) {
+                    handleBandException(e);
+                } catch (Exception e) {
+                }
+            } else if (intent.getAction() == TileEvent.ACTION_TILE_CLOSED) {
+                TileEvent tileCloseData = intent.getParcelableExtra(TileEvent.TILE_EVENT_DATA);
+            }
+        }
+    }
+
+    private class StartTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                if (getConnectedBandClient()) {
+                    if (addTile()) {
+                        updatePages();
+                    }
+                } else {
+                    return false;
+                }
+                client.getSensorManager().registerSkinTemperatureEventListener(mTempListener);
+            } catch (BandException e) {
+                handleBandException(e);
+                return false;
+            } catch (Exception e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+        }
+    }
+
+    private class StopTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                if (getConnectedBandClient()) {
+                    removeTile();
+                } else {
+                }
+                client.getSensorManager().unregisterSkinTemperatureEventListener(mTempListener);
+            } catch (BandException e) {
+                handleBandException(e);
+                return false;
+            } catch (Exception e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+        }
+    }
+
+
+
+
+
+    private void removeTile() throws BandIOException, InterruptedException, BandException {
+        if (doesTileExist()) {
+            client.getTileManager().removeTile(tileId).await();
+        }
+    }
+
+
+    private boolean doesTileExist() throws BandIOException, InterruptedException, BandException {
+        List<BandTile> tiles = client.getTileManager().getTiles().await();
+        for (BandTile tile : tiles) {
+            if (tile.getTileId().equals(tileId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean addTile() throws Exception {
+        if (doesTileExist()) {
+            return true;
+        }
+
+		/* Set the options */
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap tileIcon = BitmapFactory.decodeResource(getBaseContext().getResources(), R.raw.m_logo, options);
+
+        BandTile tile = new BandTile.Builder(tileId, "monitor.", tileIcon)
+                .setPageLayouts(createButtonLayout(), createInsightLayout()) // add the layouts here
+                .build();
+        if (client.getTileManager().addTile(this, tile).await()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // layout for page where you can toggle period on/off
+    private PageLayout createButtonLayout() {
+        return new PageLayout(
+                new FlowPanel(15, 0, 260, 120, FlowPanelOrientation.VERTICAL)
+                        .addElements(new WrappedTextBlock(new PageRect(0, 0, 245, 70), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setAutoHeightEnabled(false).setId(2))
+                        .addElements(new TextButton(0, 0, 195, 43).setMargins(0, 0, 0, 0).setPressedColor(0xFF8B61F2).setHorizontalAlignment(HorizontalAlignment.CENTER).setId(3)));
+    }
+
+    // layout for page with insights
+    private PageLayout createInsightLayout() {
+        return new PageLayout(
+                new FlowPanel(15, 0, 260, 120, FlowPanelOrientation.VERTICAL)
+                        .addElements(new WrappedTextBlock(new PageRect(0, 0, 245, 30), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setColor(0xFF8B61F2).setId(4))
+                        .addElements(new WrappedTextBlock(new PageRect(0, 30, 245, 61), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setId(5)));
+    }
+
+
+    // set up the content of the pages
+    // the order here matters
+    private void updatePages() throws BandIOException {
+        PageData togglePeriodPage = null;
+        if (onPeriod) {
+            // make server request here
+            togglePeriodPage = new PageData(pageId1, 0)
+                    .update(new WrappedTextBlockData(2, "Day 2"))
+                    .update(new TextButtonData(3, "Tap to End"));
+        } else {
+            togglePeriodPage = new PageData(pageId1, 0)
+                    .update(new WrappedTextBlockData(2, "Click below if your period has started."))
+                    .update(new TextButtonData(3, "Tap to Start"));
+        }
+        client.getTileManager().setPages(tileId,
+                new PageData(pageId2, 1)
+                        .update(new WrappedTextBlockData(4, "Insights"))
+                        .update(new WrappedTextBlockData(5, "Last Period: 6/28")),
+                togglePeriodPage);
+
+
+    }
+
+
+
+    private void sendMessage(String message) throws BandIOException {
+        client.getNotificationManager().showDialog(tileId, "Tile Message", message);
+    }
+
+    private void periodButtonClicked() throws BandIOException {
+        onPeriod = !onPeriod;
+        // make server request here
+        updatePages();
+    }
+
+    private boolean getConnectedBandClient() throws InterruptedException, BandException {
+        if (client == null) {
+            BandInfo[] devices = BandClientManager.getInstance().getPairedBands();
+            if (devices.length == 0) {
+                return false;
+            }
+            client = BandClientManager.getInstance().create(getBaseContext(), devices[0]);
+        } else if (ConnectionState.CONNECTED == client.getConnectionState()) {
+            return true;
+        }
+
+        return ConnectionState.CONNECTED == client.connect().await();
+    }
+
+    private void handleBandException(BandException e) {
+        String exceptionMessage = "";
+        switch (e.getErrorType()) {
+            case DEVICE_ERROR:
+                exceptionMessage = "Please make sure bluetooth is on and the band is in range.\n";
+                break;
+            case UNSUPPORTED_SDK_VERSION_ERROR:
+                exceptionMessage = "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK.\n";
+                break;
+            case SERVICE_ERROR:
+                exceptionMessage = "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions.\n";
+                break;
+            case BAND_FULL_ERROR:
+                exceptionMessage = "Band is full. Please use Microsoft Health to remove a tile.\n";
+                break;
+            default:
+                exceptionMessage = "Unknown error occured: " + e.getMessage() + "\n";
+                break;
+        }
+    }
 
 }

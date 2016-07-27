@@ -3,6 +3,7 @@ package com.microsoft.band.monitor;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -44,7 +45,7 @@ public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private boolean isPeriodOn;
-    private String username;
+    private String username = "";
     private int days;
 
     private View mView;
@@ -85,7 +86,8 @@ public class HomeFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        username = getActivity().getIntent().getStringExtra(LoginActivity.EXTRA_MESSAGE);
+        SharedPreferences prefs = getActivity().getSharedPreferences("Monitor", Context.MODE_PRIVATE);
+        username = prefs.getString("username", "UNKNOWN");
 
         isPeriodOn = ServerCom.status(username);
     }

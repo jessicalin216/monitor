@@ -12,7 +12,7 @@ public class TileEventReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Intent i = new Intent(context, BandTileEventAppActivity.class);
+		Intent i = new Intent(context, MainActivity.class);
 		i.setAction(intent.getAction());
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

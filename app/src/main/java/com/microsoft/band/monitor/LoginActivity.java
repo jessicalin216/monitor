@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -144,8 +145,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+            SharedPreferences prefs = getSharedPreferences("Monitor", MODE_PRIVATE);
+            prefs.edit().putString("username", EXTRA_MESSAGE).commit();
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(EXTRA_MESSAGE, email);
             startActivity(intent);
             finish();
 //            mAuthTask = new UserLoginTask(email, password);
