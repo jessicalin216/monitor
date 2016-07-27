@@ -356,19 +356,14 @@ public class ServerCom
             StringBuffer response = executeRequest (connection, args);
             System.out.println(response.toString());
             JSONArray respJson = new JSONArray(response.toString());
-            ArrayList<SymptomEntry> symptomArray = new ArrayList<SymptomEntry>();
-            for (int i = 0; i < respJson.length(); i++)
-            {
-                JSONObject cur = respJson.getJSONObject(i);
-                String date = cur.getString("date");
-                boolean acne = cur.getBoolean("acne");
-                boolean cramps = cur.getBoolean("cramps");
-                boolean tired = cur.getBoolean("tired");
-                symptomArray.add(new SymptomEntry(
-                        date, acne, cramps, tired));
-            }
+            JSONObject cur = respJson.getJSONObject();
+            String date = cur.getString("date");
+            boolean acne = cur.getBoolean("acne");
+            boolean cramps = cur.getBoolean("cramps");
+            boolean tired = cur.getBoolean("tired");
             System.out.println(response.toString());
-            return symptomArray.get(0);
+            return new SymptomEntry(
+                    date, acne, cramps, tired);
 
         } catch (Exception e) {
             e.printStackTrace();
