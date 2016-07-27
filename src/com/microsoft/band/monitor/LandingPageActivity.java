@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +40,7 @@ public class LandingPageActivity extends Activity
     private CharSequence mTitle;
 
     private boolean isPeriodOn;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,14 @@ public class LandingPageActivity extends Activity
 
         // Get all the info
         // TODO
-        isPeriodOn = false;
+        // Some serious bullshit to run all network tasks on the UI thread
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        username = getIntent().getStringExtra(LoginActivity.EXTRA_MESSAGE);
+
+        isPeriodOn = ServerCom.status(username);
+
         // Change header text
         TextView periodInfoText = (TextView) findViewById(R.id.periodInfoText);
         int days = 2;
@@ -75,6 +84,8 @@ public class LandingPageActivity extends Activity
         // Set button visibility
         Button healthInfoButton = (Button) findViewById(R.id.healthInfoButton);
         healthInfoButton.setVisibility(isPeriodOn ? View.VISIBLE : View.GONE);
+
+
     }
 
     @Override
@@ -131,6 +142,7 @@ public class LandingPageActivity extends Activity
         healthInfoButton.setVisibility(isPeriodOn ? View.VISIBLE : View.GONE);
 
         // TODO call toggle
+        ServerCom.toggle(username);
     }
 
     public void enterHealthInfo(View view) {
