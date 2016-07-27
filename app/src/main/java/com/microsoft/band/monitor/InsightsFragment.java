@@ -2,19 +2,27 @@ package com.microsoft.band.monitor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TabHost;
 
 import com.jjoe64.graphview.*;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.roomorama.caldroid.CaldroidFragment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +51,12 @@ public class InsightsFragment extends Fragment {
     private String mParam2;
 
     private String username;
+
+    ListView dates;
+    ListView duration;
+
+    boolean isLeftListEnabled = true;
+    boolean isRightListEnabled = true;
 
     private OnFragmentInteractionListener mListener;
 
@@ -166,8 +180,144 @@ public class InsightsFragment extends Fragment {
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
 
-        series2.setColor(Color.RED);
+        series.setColor(Color.DKGRAY);
+        series2.setColor(Color.rgb(160,24,180));
         series3.setColor(Color.GREEN);
+
+
+
+
+
+
+
+       // COPY "LIST" CODE HERE
+
+
+
+        // Tabs
+//        TabHost host = (TabHost) view.findViewById(R.id.tabHost);
+//        host.setup();
+//
+//        TabHost.TabSpec spec = host.newTabSpec("List");
+//        spec.setContent(R.id.tab1);
+//        spec.setIndicator("List");
+//        host.addTab(spec);
+
+        // List View
+        dates = (ListView)view.findViewById(R.id.dates);
+        duration = (ListView) view.findViewById(R.id.duration);
+
+        String[] blah = new String[]{"2016-01-1 to 2016-01-6",
+                "2016-02-1 to 2016-02-6",
+                "2016-03-1 to 2016-03-6",
+                "2016-04-1 to 2016-04-6",
+                "2016-05-1 to 2016-05-6",
+                "2016-06-1 to 2016-06-6",
+                "2016-07-1 to 2016-07-6",
+                "2016-08-1 to 2016-08-6",
+                "2016-09-1 to 2016-09-6",
+                "2016-10-1 to 2016-10-6",
+                "2016-11-1 to 2016-11-6",
+                "2016-12-1 to 2016-12-6",};
+        String[] plah = new String[]{"6 days","6 days","6 days","6 days","6 days",
+                "6 days","6 days","6 days","6 days","6 days","6 days","6 days"};
+
+        ArrayAdapter<String> datesAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, blah){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+                if(position %2 == 1)
+                {
+                    // Set a background color for ListView regular row/item
+                    view.setBackgroundColor(Color.parseColor("#d7bef9"));
+                }
+                else
+                {
+                    // Set the background color for alternate row/item
+                    view.setBackgroundColor(Color.parseColor("#c39ff4"));
+                }
+                return view;
+            }
+        };
+
+        ArrayAdapter<String> durationAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, plah){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+                if(position %2 == 1)
+                {
+                    // Set a background color for ListView regular row/item
+                    view.setBackgroundColor(Color.parseColor("#d7bef9"));
+
+                }
+                else
+                {
+                    // Set the background color for alternate row/item
+                    view.setBackgroundColor(Color.parseColor("#c39ff4"));
+                }
+                return view;
+            }
+        };
+
+        dates.setAdapter(datesAdapter);
+        duration.setAdapter(durationAdapter);
+
+        // IF YOU DO NOT OVERRIDE THIS
+        // ONLY THE ONE THAT IS TOUCHED WILL SCROLL OVER
+        dates.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
+        duration.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
+
+        dates.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // onScroll will be called and there will be an infinite loop.
+                // That's why i set a boolean value
+                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    isRightListEnabled = false;
+                } else if (scrollState == SCROLL_STATE_IDLE) {
+                    isRightListEnabled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
+                View c = view.getChildAt(0);
+                if (c != null && isLeftListEnabled) {
+                    duration.setSelectionFromTop(firstVisibleItem, c.getTop());
+                }
+            }
+        });
+
+        duration.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    isLeftListEnabled = false;
+                } else if (scrollState == SCROLL_STATE_IDLE) {
+                    isLeftListEnabled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                                 int totalItemCount) {
+                View c = view.getChildAt(0);
+                if (c != null && isRightListEnabled) {
+                    dates.setSelectionFromTop(firstVisibleItem, c.getTop());
+                }
+            }
+        });
+
+
+
+
+
         return view;
     }
 
