@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,6 +192,8 @@ public class HomeFragment extends Fragment {
             CheckBox c_tired = (CheckBox) ((AlertDialog) dialog).findViewById(R.id.checkbox_tired);
             boolean tired = c_tired.isChecked();
 
+            Log.d("Chad", "hi" + acne + cramps + tired);
+
             // Catch empty rating
             if (rating < 1) {
                 Toast.makeText(getActivity(), getString(R.string.landing_healthinfo_dialog_error),
@@ -200,6 +203,7 @@ public class HomeFragment extends Fragment {
             else {
                 ServerCom.sendMoodData(username, rating);
                 ServerCom.sendSymptomInfo(username, acne, cramps, tired);
+                updateEmotion();
                 dialog.dismiss();
             }
         }
@@ -216,12 +220,18 @@ public class HomeFragment extends Fragment {
 
         // TODO: update for all emotions
         monMon_backdrop.setImageResource(isPeriodOn ? R.drawable.period : R.drawable.noperiod);
-        monMon_face.setImageResource(isPeriodOn ? R.drawable.tired : R.drawable.happy);
+        monMon_face.setImageResource(arr.tired ? R.drawable.tired : R.drawable.happy);
         if (arr.acne) { // acne
             monMon_symptom1.setVisibility(View.VISIBLE); //
         }
+        else {
+            monMon_symptom1.setVisibility(View.INVISIBLE); //
+        }
         if (arr.cramps) { // cramps
             monMon_symptom2.setVisibility(View.VISIBLE);
+        }
+        else {
+            monMon_symptom2.setVisibility(View.INVISIBLE);
         }
     }
 
