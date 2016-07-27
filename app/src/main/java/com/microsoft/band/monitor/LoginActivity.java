@@ -146,8 +146,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
             showProgress(true);
             SharedPreferences prefs = getSharedPreferences("Monitor", MODE_PRIVATE);
-            prefs.edit().putString("username", EXTRA_MESSAGE).commit();
+            prefs.edit().putString("username", email).commit();
             Intent intent = new Intent(this, MainActivity.class);
+            Bundle b = new Bundle();
+            b.putString("username", email); //Your id
+            intent.putExtras(b);
             startActivity(intent);
             finish();
 //            mAuthTask = new UserLoginTask(email, password);
