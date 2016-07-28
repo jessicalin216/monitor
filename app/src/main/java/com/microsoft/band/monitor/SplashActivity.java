@@ -2,6 +2,7 @@ package com.microsoft.band.monitor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -19,7 +20,9 @@ public class SplashActivity extends Activity {
                 }catch(InterruptedException e){
                     e.printStackTrace();
                 }finally{
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    SharedPreferences prefs = getSharedPreferences("Monitor", MODE_PRIVATE);
+                    prefs.edit().putString("username", "monmon").commit();
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }

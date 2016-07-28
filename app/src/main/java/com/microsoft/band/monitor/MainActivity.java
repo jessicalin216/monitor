@@ -422,10 +422,9 @@ public class MainActivity extends AppCompatActivity
     // layout for page with insights
     private PageLayout createInsightLayout() {
         return new PageLayout(
-                new ScrollFlowPanel(15, 0, 260, 150, FlowPanelOrientation.VERTICAL)
+                new ScrollFlowPanel(new PageRect(0, 0, 260, 120), FlowPanelOrientation.VERTICAL)
                         .addElements(new WrappedTextBlock(new PageRect(0, 0, 245, 30), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setColor(0xFF8B61F2).setId(4))
-                        .addElements(new WrappedTextBlock(new PageRect(0, 31, 245, 30), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setId(5))
-                        .addElements(new WrappedTextBlock(new PageRect(0, 60, 245, 30), WrappedTextBlockFont.SMALL).setMargins(0, 0, 0, 0).setId(6)));
+                        .addElements(new WrappedTextBlock(new PageRect(0, 0, 245, 120), WrappedTextBlockFont.SMALL).setAutoHeightEnabled(true).setMargins(0, 0, 0, 0).setId(5)));
 
     }
 
@@ -447,8 +446,7 @@ public class MainActivity extends AppCompatActivity
         client.getTileManager().setPages(tileId,
                 new PageData(pageId2, 1)
                         .update(new WrappedTextBlockData(4, "Insights"))
-                        .update(new WrappedTextBlockData(5, "Last Period: 6/28"))
-                        .update(new WrappedTextBlockData(6, "Next Predicted Period: 123")),
+                        .update(new WrappedTextBlockData(5, "Last Period: "+ServerCom.prev(username)+"\nNext Predicted Period: "+ ServerCom.predict(username))),
                 togglePeriodPage);
     }
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -192,8 +194,6 @@ public class HomeFragment extends Fragment {
             CheckBox c_tired = (CheckBox) ((AlertDialog) dialog).findViewById(R.id.checkbox_tired);
             boolean tired = c_tired.isChecked();
 
-            Log.d("Chad", "hi" + acne + cramps + tired);
-
             // Catch empty rating
             if (rating < 1) {
                 Toast.makeText(getActivity(), getString(R.string.landing_healthinfo_dialog_error),
@@ -255,12 +255,23 @@ public class HomeFragment extends Fragment {
                 days + " " + getString(R.string.landing_periodoff_suffix);
         periodInfoText.setText(infoHeader);
 
-        // Change button text
+        // Change button text and color of button
         Button startEndPeriodButton = (Button) mView.findViewById(R.id.startEndPeriodButton);
         String buttonText = !isPeriodOn ?
                 getString(R.string.landing_periodon_button_text) :
                 getString(R.string.landing_periodoff_button_text);
         startEndPeriodButton.setText(buttonText);
+
+        // Changing some colors for the UI
+        LinearLayout homeBottom = (LinearLayout) mView.findViewById(R.id.homeBottomPanel);
+        if (isPeriodOn) {
+            homeBottom.setBackgroundColor(0xFFE9DEEE);
+            startEndPeriodButton.setBackgroundColor(0xFF843C96);
+        }
+        else {
+            homeBottom.setBackgroundColor(0xFF97d3af);
+            startEndPeriodButton.setBackgroundColor(0xFF399972);
+        }
 
         // Set button visibility
         Button healthInfoButton = (Button) mView.findViewById(R.id.healthInfoButton);

@@ -12,7 +12,7 @@
     <string name="stop">Stop</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">This page is under construction.</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -30,7 +30,7 @@
 
     <!-- Landing page strings -->
     <string name="landing_howareyou_header">How are you feeling today?</string>
-    <string name="landing_periodstart_prefix">PERIOD START DATE WAS</string>
+    <string name="landing_periodstart_prefix">YOUR PERIOD START DATE WAS</string>
     <string name="landing_projectedstart_prefix">YOUR NEXT PREDICTED PERIOD IS IN</string>
     <string name="landing_periodon_prefix">Day</string>
     <string name="landing_periodoff_suffix">days</string>
@@ -38,7 +38,7 @@
     <string name="landing_periodoff_button_text">TAP IF PERIOD HAS ENDED</string>
     <string name="landing_healthinfo_button_text">TAP TO ADD DETAILS</string>
     <string name="landing_healthinfo_dialog_title">How are you feeling?</string>
-    <string name="landing_healthinfo_dialog_mesage">Rate how you\'re feeling right now. (1 is worse, 5 is best) </string>
+    <string name="landing_healthinfo_dialog_mesage">Rate how you\'re feeling right now. (1 means feeling the worst, 5 means feeling the best) </string>
     <string name="landing_healthinfo_dialog_error">Your mood rating needs to be at least 1.</string>
 
     <string name="ok">OK</string>

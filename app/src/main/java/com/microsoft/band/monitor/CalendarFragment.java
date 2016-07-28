@@ -119,18 +119,17 @@ public class CalendarFragment extends Fragment {
         Resources res = getResources();
         Drawable d = res.getDrawable(R.drawable.purple_square_hi);
 
-        for(int m=0; m <= 11; m++){
+        for(int m=0; m <= 1; m++){
             Date start = new Date(116, m, 1);
             Date end = new Date(116, m, 6);
 
             caldroidFragment.setSelectedDates(start, end);
 
+            // duration
             for(int i = 1; i <= 6; i++) {
                 Date hold = new Date(116, m, i);
                 caldroidFragment.setBackgroundDrawableForDate(d, hold);
             }
-
-
         }
 
 
@@ -138,8 +137,7 @@ public class CalendarFragment extends Fragment {
         dates = (ListView)view.findViewById(R.id.dates);
         duration = (ListView) view.findViewById(R.id.duration);
 
-        String[] blah = new String[]{"Average Length",
-                                     "2016-02-1 to 2016-02-6",
+        String[] blah = new String[]{"2016-02-1 to 2016-02-6",
                                      "2016-03-1 to 2016-03-6",
                                      "2016-04-1 to 2016-04-6",
                                      "2016-05-1 to 2016-05-6",
