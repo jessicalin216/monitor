@@ -119,11 +119,9 @@ public class CalendarFragment extends Fragment {
         Resources res = getResources();
         Drawable d = res.getDrawable(R.drawable.purple_square_hi);
 
-        for(int m=0; m <= 1; m++){
-            Date start = new Date(116, m, 1);
-            Date end = new Date(116, m, 6);
-
-            caldroidFragment.setSelectedDates(start, end);
+        // set the calendar dots on the calendar view
+        for(int m=6; m <= 8; m++){
+            caldroidFragment.setSelectedDates(new Date(116, m, 1), new Date(116, m, 6));
 
             // duration
             for(int i = 1; i <= 6; i++) {
@@ -137,19 +135,13 @@ public class CalendarFragment extends Fragment {
         dates = (ListView)view.findViewById(R.id.dates);
         duration = (ListView) view.findViewById(R.id.duration);
 
-        String[] blah = new String[]{"2016-02-1 to 2016-02-6",
-                                     "2016-03-1 to 2016-03-6",
-                                     "2016-04-1 to 2016-04-6",
-                                     "2016-05-1 to 2016-05-6",
-                                     "2016-06-1 to 2016-06-6",
-                                     "2016-07-1 to 2016-07-6",
-                                     "2016-08-1 to 2016-08-6",
-                                     "2016-09-1 to 2016-09-6",
-                                     "2016-10-1 to 2016-10-6",
-                                     "2016-11-1 to 2016-11-6",
-                                     "2016-12-1 to 2016-12-6"};
-        String[] plah = new String[]{"6 days","6 days","6 days","6 days","6 days",
-                "6 days","6 days","6 days","6 days","6 days","6 days","6 days"};
+        String[] blah = new String[]
+                {
+                    "Aug 1, 2016 to Aug 6, 2016",
+                    "Jul 1, 2016 to Jul 6, 2016",
+                    "Jun 1, 2016 to Jun 6, 2016"
+                };
+        String[] plah = new String[]{"6 days","6 days","6 days"};
 
         ArrayAdapter<String> datesAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, blah){

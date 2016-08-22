@@ -305,11 +305,16 @@ public class HomeFragment extends Fragment {
         if(date.contains("na"))
             return "";
         String[] splitStr = date.split("-");
-        int year = Integer.parseInt(splitStr[0]) - 1900;
-        int month = Integer.parseInt(splitStr[1]) - 1;
-        int day = Integer.parseInt(splitStr[2]);
-        Date nextDate = new Date(year, month, day);
-        return sdf.format(nextDate).toUpperCase();
+        try {
+            int year = Integer.parseInt(splitStr[0]) - 1900;
+            int month = Integer.parseInt(splitStr[1]) - 1;
+            int day = Integer.parseInt(splitStr[2]);
+            Date nextDate = new Date(year, month, day);
+            return sdf.format(nextDate).toUpperCase();
+        }
+        catch (Exception e) {
+            return "";
+        }
     }
 
     /**
