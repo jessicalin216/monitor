@@ -150,7 +150,7 @@ public class CalendarFragment extends Fragment {
                 Date date_item = j.next();
 
                 // duration
-                caldroidFragment.setBackgroundDrawableForDate(d, newEndDate);
+                caldroidFragment.setBackgroundDrawableForDate(d, date_item);
 
 
             }
@@ -163,14 +163,16 @@ public class CalendarFragment extends Fragment {
         duration = (ListView) view.findViewById(R.id.duration);
 
 
-        String[] blah = new String[rawData.size()];
-        String[] plah = new String[rawData.size()];
-        int it = 0;
+        String[] blah = new String[rawData.size()+1];
+        String[] plah = new String[rawData.size()+1];
+        blah[0] = "Dates";
+        plah[0] = "Duration";
+        int it = 1;
         for(Iterator<PeriodCalendarEntry> i = rawData.iterator(); i.hasNext();)
         {
             PeriodCalendarEntry item = i.next();
             blah[it] = item.startDate + " to " + item.endDate;
-            plah[it] = Integer.toString(item.days);
+            plah[it] = Integer.toString(item.days) + " days";
             it++;
         }
 

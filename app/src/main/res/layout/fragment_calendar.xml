@@ -41,11 +41,22 @@
 
                         <CalendarView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:id="@+id/calendarView"
                             android:layout_gravity="center_horizontal"
                             android:showWeekNumber="false"
                             android:layout_marginTop="20dp" />
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="15dp"
+                            android:id="@+id/startEndPeriodButton"
+                            android:layout_gravity="center_horizontal"
+                            android:onClick="startEndPeriod"
+                            android:background="@color/colorPrimaryDark"
+                            android:text="Add a missing period"
+                            android:textColor="#FFFFFF"
+                            android:textStyle="bold"/>
                     </LinearLayout>
 
                     <LinearLayout

@@ -3,16 +3,20 @@ package com.microsoft.band.monitor;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.*;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
@@ -24,6 +28,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -48,8 +53,7 @@ public class InsightsFragment extends Fragment {
 
     private String username;
 
-    ListView dates;
-    ListView duration;
+
 
     boolean isLeftListEnabled = true;
     boolean isRightListEnabled = true;
@@ -92,104 +96,14 @@ public class InsightsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_insights, container, false);
-        GraphView graph = (GraphView) view.findViewById(R.id.graph);
         SharedPreferences prefs = getActivity().getSharedPreferences("Monitor", 0);
         username = prefs.getString("username", "UNKNOWN");
-        Log.d("LOGIN", username);
+
         ArrayList<PeriodInsightsEntry> rawData = ServerCom.get_all(username);
-
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-
-        DataPoint[] dataPoints = new DataPoint[rawData.size()];
-        DataPoint[] dataPoints2 = new DataPoint[rawData.size()];
-        DataPoint[] dataPoints3 = new DataPoint[rawData.size()];
-            for (int i = 0; i < rawData.size(); i++) {
-                String dateStr = rawData.get(i).date;
-                Log.d("INSIGHTS2", dateStr);
-                dateStr = dateStr.replace("\"", "");
-                String [] dateArr = dateStr.split("-", 0);
-                if(dateArr.length != 3) {
-                    Log.d("INSIGHTS", "Date not formatted properly");
-                    for(int j = 0; j < dateArr.length; j++) {
-                        Log.d("INSIGHTS", "\t"+dateArr[j]);
-                    }
-                }
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
-                Date date = null;
-                try {
-                    date = formatter.parse(dateStr);
-                } catch (ParseException e) {
-                    Log.d("ERRORREKT", e.getMessage());
-                }
-                dataPoints[i] = new DataPoint(date, rawData.get(i).mood);
-                dataPoints2[i] = new DataPoint(date, rawData.get(i).heart);
-                dataPoints3[i] = new DataPoint(date, convertToF(rawData.get(i).temp));
-            }
-
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPoints);
-        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<DataPoint>(dataPoints2);
-        LineGraphSeries<DataPoint> series3 = new LineGraphSeries<DataPoint>(dataPoints3);
-            //graph.addSeries(series2);
-            series.setTitle("Mood");
-        series2.setTitle("Heart Rate");
-        series3.setTitle("Temperature");
-
-//        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-//                new DataPoint(0, 1),
-//                new DataPoint(1, 5),
-//                new DataPoint(2, 3),
-//                new DataPoint(3, 2),
-//                new DataPoint(4, 6)
-//        });
-
-        // generate Dates
-
-
-
-// you can directly pass Date objects to DataPoint-Constructor
-// this will convert the Date to double via Date#getTime()
-//        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-//                new DataPoint(d1, 1),
-//                new DataPoint(d2, 5),
-//                new DataPoint(d3, 3)
-//        });
-
-        graph.addSeries(series);
-        graph.addSeries(series2);
-        graph.addSeries(series3);
-
-
-
-        //graph.addSeries(series);
-        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);// It will remove the background grids
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
-
-        graph.getViewport().setMinY(0.0);
-        graph.getViewport().setMaxY(100.0);
-
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setXAxisBoundsManual(true);
-
-        // legend
-        //series.setTitle("foo");
-
-        graph.getLegendRenderer().setVisible(true);
-        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-
-        series.setColor(Color.DKGRAY);
-        series2.setColor(Color.rgb(160,24,180));
-        series3.setColor(Color.GREEN);
-
-
-
-
-
-
-
+        UserEntry user = ServerCom.user(username);
 
         // List View
-        dates = (ListView)view.findViewById(R.id.dates);
-        duration = (ListView) view.findViewById(R.id.duration);
+        ListView insights = (ListView)view.findViewById(R.id.listView);
 
         double avgHeart = 0;
         double avgTemp = 0;
@@ -213,110 +127,53 @@ public class InsightsFragment extends Fragment {
 
         DecimalFormat numberFormat = new DecimalFormat("#.00");
 
-        String[] blah = new String[]{
+        ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
+        String[] titleArray=new String[]{
+                "Last Period",
+                "Next Predicted Period",
                 "Average Duration of Cycle",
+                "Average Days In-between Cycles",
                 "Most Recorded Symptoms",
-                "Average Body Temperature During Cycle",
+                "Average Basal Body Temperature During Cycle",
                 "Average Heart Rate During Cycle",
                 "Average Recorded Happiness Level"};
-        String[] plah = new String[]{
-                Double.toString(ServerCom.user(username).avg_len),
+        String[] subItemArray=new String[]{
+                ServerCom.prev(username),
+                ServerCom.predict(username),
+                Double.toString(user.avg_len) + " days",
+                Double.toString(user.avg_sep) + " days",
                 "Cramps",
                 numberFormat.format(avgTemp) + " F",
                 numberFormat.format(avgHeart),
                 numberFormat.format(avgMood)+"/5"};
-
-        ArrayAdapter<String> datesAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, blah){
+        for(int i=0;i<titleArray.length;i++){
+            HashMap<String,String> datum = new HashMap<String, String>();
+            datum.put("Item", titleArray[i]);
+            datum.put("Subitem", subItemArray[i]);
+            data.add(datum);
+        }
+        SimpleAdapter adapter = new SimpleAdapter(getActivity(), data, android.R.layout.simple_list_item_2,
+                new String[] {"Item", "Subitem"}, new int[] {android.R.id.text1, android.R.id.text2}){
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
-                // Get the current item from ListView
-                View view = super.getView(position,convertView,parent);
-                if(position %2 == 1)
-                {
-                    // Set a background color for ListView regular row/item
-                    view.setBackgroundColor(Color.parseColor("#E9DEEE"));
-                }
-                else
-                {
-                    // Set the background color for alternate row/item
-                    view.setBackgroundColor(Color.parseColor("#E9DEEE"));
-                }
+                /// Get the Item from ListView
+                View view = super.getView(position, convertView, parent);
+
+                TextView tv1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView tv2 = (TextView) view.findViewById(android.R.id.text2);
+                tv1.setTypeface(null, Typeface.BOLD);
+                tv1.setAllCaps(true);
+
+                // Set the text size 25 dip for ListView each item
+                tv2.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+
+                // Return the view
                 return view;
             }
         };
 
-        ArrayAdapter<String> durationAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, plah){
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent){
-                // Get the current item from ListView
-                View view = super.getView(position,convertView,parent);
-                if(position %2 == 1)
-                {
-                    // Set a background color for ListView regular row/item
-                    view.setBackgroundColor(Color.parseColor("#ffffff"));
+        insights.setAdapter(adapter);
 
-                }
-                else
-                {
-                    // Set the background color for alternate row/item
-                    view.setBackgroundColor(Color.parseColor("#ffffff"));
-                }
-                return view;
-            }
-        };
-
-        dates.setAdapter(datesAdapter);
-        duration.setAdapter(durationAdapter);
-
-        // IF YOU DO NOT OVERRIDE THIS
-        // ONLY THE ONE THAT IS TOUCHED WILL SCROLL OVER
-        dates.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
-        duration.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
-
-        dates.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                // onScroll will be called and there will be an infinite loop.
-                // That's why i set a boolean value
-                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
-                    isRightListEnabled = false;
-                } else if (scrollState == SCROLL_STATE_IDLE) {
-                    isRightListEnabled = true;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                                 int totalItemCount) {
-                View c = view.getChildAt(0);
-                if (c != null && isLeftListEnabled) {
-                    duration.setSelectionFromTop(firstVisibleItem, c.getTop());
-                }
-            }
-        });
-
-        duration.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
-                    isLeftListEnabled = false;
-                } else if (scrollState == SCROLL_STATE_IDLE) {
-                    isLeftListEnabled = true;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                                 int totalItemCount) {
-                View c = view.getChildAt(0);
-                if (c != null && isRightListEnabled) {
-                    dates.setSelectionFromTop(firstVisibleItem, c.getTop());
-                }
-            }
-        });
         return view;
 
     }
