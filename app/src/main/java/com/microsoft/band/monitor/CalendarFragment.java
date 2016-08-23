@@ -131,14 +131,16 @@ public class CalendarFragment extends Fragment {
             String[] start = item.startDate.split("-");
             Date newStartDate = new Date(
                     Integer.parseInt(start[0]) - 2000 + 100,
-                    Integer.parseInt(start[1]),
+                    Integer.parseInt(start[1]) + 1,
                     Integer.parseInt(start[2]));
             String[] end = item.endDate.split("-");
             Date newEndDate = new Date(
                     Integer.parseInt(end[0]) - 2000 + 100,
-                    Integer.parseInt(end[1]),
+                    Integer.parseInt(end[1]) + 1,
                     Integer.parseInt(end[2]));
 
+
+            System.out.println("ANGIE " + end[1] + " " + newEndDate);
             caldroidFragment.setSelectedDates(newStartDate, newEndDate);
 
 
@@ -148,7 +150,7 @@ public class CalendarFragment extends Fragment {
                 Date date_item = j.next();
 
                 // duration
-                caldroidFragment.setBackgroundDrawableForDate(d, date_item);
+                caldroidFragment.setBackgroundDrawableForDate(d, newEndDate);
 
 
             }
