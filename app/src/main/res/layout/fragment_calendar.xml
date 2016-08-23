@@ -65,9 +65,8 @@
                                 android:id="@+id/dates"
                                 android:scrollbars="none"/>
                             <ListView
-                                android:layout_weight="1"
                                 android:layout_height="fill_parent"
-                                android:layout_width="fill_parent"
+                                android:layout_width="133dp"
                                 android:id="@+id/duration"/>
                         </LinearLayout>
                     </LinearLayout>

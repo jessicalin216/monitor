@@ -31,7 +31,7 @@
     <!-- Landing page strings -->
     <string name="landing_howareyou_header">How are you feeling today?</string>
     <string name="landing_periodstart_prefix">YOUR PERIOD START DATE WAS</string>
-    <string name="landing_projectedstart_prefix">YOUR NEXT PREDICTED PERIOD IS IN</string>
+    <string name="landing_projectedstart_prefix">YOUR NEXT PREDICTED PERIOD IS ON</string>
     <string name="landing_periodon_prefix">Day</string>
     <string name="landing_periodoff_suffix">days</string>
     <string name="landing_periodon_button_text">TAP IF PERIOD HAS STARTED</string>

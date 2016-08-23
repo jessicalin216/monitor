@@ -246,7 +246,7 @@ public class HomeFragment extends Fragment {
         String startDate = today.getYear()+1900 + "-" + (today.getMonth() + 1) + "-" + (today.getDate() - days);
         String startHeader = isPeriodOn ?
                 getString(R.string.landing_periodstart_prefix) + " " + getMonthDate(startDate) :
-                getString(R.string.landing_projectedstart_prefix) + " " + getMonthDate(ServerCom.predict(username).replaceAll("\"",""));
+                getString(R.string.landing_projectedstart_prefix) + " " + getMonthDate(ServerCom.predict(username).replaceAll("\"","")) +" IN";
         periodStartText.setText(startHeader);
 
         TextView periodInfoText = (TextView) mView.findViewById(R.id.periodInfoText);
@@ -303,7 +303,7 @@ public class HomeFragment extends Fragment {
         // Change string into a date
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd");
         if(date.contains("na"))
-            return "";
+            return "N/A";
         String[] splitStr = date.split("-");
         try {
             int year = Integer.parseInt(splitStr[0]) - 1900;
@@ -313,7 +313,7 @@ public class HomeFragment extends Fragment {
             return sdf.format(nextDate).toUpperCase();
         }
         catch (Exception e) {
-            return "";
+            return "N/A";
         }
     }
 

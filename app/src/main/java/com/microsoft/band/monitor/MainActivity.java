@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity
                     if (onPeriod)
                         sendMessage("You made it!");
                     else
-                        sendMessage("Avoid caffeine in the next 2 days. :)");
+                        sendMessage(ServerCom.tip(username));
                     togglePeriod();
                 } catch (BandException e) {
                     handleBandException(e);
@@ -436,7 +436,7 @@ public class MainActivity extends AppCompatActivity
         if (onPeriod) {
             // make server request here
             togglePeriodPage = new PageData(pageId1, 0)
-                    .update(new WrappedTextBlockData(2, "Day " + ServerCom.day(username)))
+                    .update(new WrappedTextBlockData(2, "Day " + Integer.toString(ServerCom.day(username))))
                     .update(new TextButtonData(3, "Tap to End"));
         } else {
             togglePeriodPage = new PageData(pageId1, 0)
@@ -446,7 +446,8 @@ public class MainActivity extends AppCompatActivity
         client.getTileManager().setPages(tileId,
                 new PageData(pageId2, 1)
                         .update(new WrappedTextBlockData(4, "Insights"))
-                        .update(new WrappedTextBlockData(5, "Last Period: "+ServerCom.prev(username)+"\nNext Predicted Period: "+ ServerCom.predict(username))),
+                        .update(new WrappedTextBlockData(5, "Last Period: "+ ServerCom.prev(username)
+                                + "\nNext Predicted Period: "+ ServerCom.predict(username))),
                 togglePeriodPage);
     }
 

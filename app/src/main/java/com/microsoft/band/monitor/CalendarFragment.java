@@ -1,14 +1,13 @@
 package com.microsoft.band.monitor;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentManager;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import java.util.*;
@@ -45,6 +43,9 @@ public class CalendarFragment extends Fragment {
 
     ListView dates;
     ListView duration;
+
+    private String username;
+
 
     boolean isLeftListEnabled = true;
     boolean isRightListEnabled = true;
@@ -80,7 +81,8 @@ public class CalendarFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        SharedPreferences prefs = getActivity().getSharedPreferences("Monitor", 0);
+        username = prefs.getString("username", "UNKNOWN");
         super.onCreate(savedInstanceState);
     }
 
@@ -119,29 +121,56 @@ public class CalendarFragment extends Fragment {
         Resources res = getResources();
         Drawable d = res.getDrawable(R.drawable.purple_square_hi);
 
-        // set the calendar dots on the calendar view
-        for(int m=6; m <= 8; m++){
-            caldroidFragment.setSelectedDates(new Date(116, m, 1), new Date(116, m, 6));
 
-            // duration
-            for(int i = 1; i <= 6; i++) {
-                Date hold = new Date(116, m, i);
-                caldroidFragment.setBackgroundDrawableForDate(d, hold);
+        ArrayList<PeriodCalendarEntry> rawData = ServerCom.get_list(username);
+
+        // set the calendar dots on the calendar view
+        for(Iterator<PeriodCalendarEntry> i = rawData.iterator(); i.hasNext();) {
+            PeriodCalendarEntry item = i.next();
+
+            String[] start = item.startDate.split("-");
+            Date newStartDate = new Date(
+                    Integer.parseInt(start[0]) - 2000 + 100,
+                    Integer.parseInt(start[1]),
+                    Integer.parseInt(start[2]));
+            String[] end = item.endDate.split("-");
+            Date newEndDate = new Date(
+                    Integer.parseInt(end[0]) - 2000 + 100,
+                    Integer.parseInt(end[1]),
+                    Integer.parseInt(end[2]));
+
+            caldroidFragment.setSelectedDates(newStartDate, newEndDate);
+
+
+            List<Date> dateList = getDaysBetweenDates(newStartDate, newEndDate);
+            // set the calendar dots on the calendar view
+            for (Iterator<Date> j = dateList.iterator(); j.hasNext(); ) {
+                Date date_item = j.next();
+
+                // duration
+                caldroidFragment.setBackgroundDrawableForDate(d, date_item);
+
+
             }
+
         }
 
 
-        // List View
+            // List View
         dates = (ListView)view.findViewById(R.id.dates);
         duration = (ListView) view.findViewById(R.id.duration);
 
-        String[] blah = new String[]
-                {
-                    "Aug 1, 2016 to Aug 6, 2016",
-                    "Jul 1, 2016 to Jul 6, 2016",
-                    "Jun 1, 2016 to Jun 6, 2016"
-                };
-        String[] plah = new String[]{"6 days","6 days","6 days"};
+
+        String[] blah = new String[rawData.size()];
+        String[] plah = new String[rawData.size()];
+        int it = 0;
+        for(Iterator<PeriodCalendarEntry> i = rawData.iterator(); i.hasNext();)
+        {
+            PeriodCalendarEntry item = i.next();
+            blah[it] = item.startDate + " to " + item.endDate;
+            plah[it] = Integer.toString(item.days);
+            it++;
+        }
 
         ArrayAdapter<String> datesAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, blah){
@@ -276,4 +305,21 @@ public class CalendarFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private List<Date> getDaysBetweenDates(Date startdate, Date enddate)
+    {
+        List<Date> dates = new ArrayList<Date>();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startdate);
+
+        while (calendar.getTime().before(enddate))
+        {
+            Date result = calendar.getTime();
+            dates.add(result);
+            calendar.add(Calendar.DATE, 1);
+        }
+        return dates;
+    }
+
+
 }

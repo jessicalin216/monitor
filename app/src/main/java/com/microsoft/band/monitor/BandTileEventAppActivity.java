@@ -57,6 +57,7 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+// Only gets called if entering Debug Band button, actual implementation in MainActivity
 public class BandTileEventAppActivity extends Activity {
 
 	private BandClient client = null;

@@ -20,9 +20,7 @@ public class SplashActivity extends Activity {
                 }catch(InterruptedException e){
                     e.printStackTrace();
                 }finally{
-                    SharedPreferences prefs = getSharedPreferences("Monitor", MODE_PRIVATE);
-                    prefs.edit().putString("username", "monmon").commit();
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
                 }

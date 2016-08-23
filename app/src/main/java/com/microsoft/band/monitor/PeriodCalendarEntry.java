@@ -2,26 +2,19 @@ package com.microsoft.band.monitor;
 
 public class PeriodCalendarEntry {
 
-    String date;
-    double temp, heart;
-    int mood;
-    boolean onPeriod;
+    String startDate, endDate;
+    int days;
 
-    public PeriodCalendarEntry(String date, double temp, double heart,
-                               int mood, boolean onPeriod) {
-        this.date = new String(date);
-        this.temp = temp;
-        this.heart = heart;
-        this.mood = mood;
-        this.onPeriod = onPeriod;
+    public PeriodCalendarEntry(String startDate, String endDate, int days) {
+        this.startDate = new String(startDate);
+        this.endDate = new String(endDate);
+        this.days = days;
     }
 
     @Override
     public String toString() {
-        return "Date = " + date +
-                "\nTemp = " + temp +
-                "\nHeart= " + heart +
-                "\nMood= " + mood +
-                "\nonPeriod= " + onPeriod;
+        return "StartDate = " + startDate +
+                "\nEndDate = " + endDate +
+                "\nNumber of Days = " + days;
     }
 }

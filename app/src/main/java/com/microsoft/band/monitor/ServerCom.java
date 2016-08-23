@@ -133,7 +133,7 @@ public class ServerCom
                 System.out.println(responseStr);
                 return null;
             }
-            return responseStr;
+            return responseStr.replace("\"", "");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -187,7 +187,7 @@ public class ServerCom
 
     /**
      * Returns what day of the user's period they are on.
-     * TODO: Currently doesn't work
+     * Seems to work I hope
      */
     public static int day(String username) {
         HttpURLConnection connection = null;
@@ -243,7 +243,7 @@ public class ServerCom
                 //TODO: Figure out how they want the data
                 return responseStr.substring(4);
             }
-            return responseStr;
+            return responseStr.replace("\"", "");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -279,7 +279,7 @@ public class ServerCom
                 //TODO: Figure out how they want the data
                 return responseStr.substring(4);
             }
-            return responseStr;
+            return responseStr.replace("\"", "");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -292,7 +292,10 @@ public class ServerCom
         }
     }
 
-    public static ArrayList<PeriodListEntry> get_list(String username) {
+    /*
+     * For the calendar page with the period information
+     */
+    public static ArrayList<PeriodCalendarEntry> get_list(String username) {
         HttpURLConnection connection = null;
 
         String args = "get_list";
@@ -307,7 +310,7 @@ public class ServerCom
             // Execute request with no args
             StringBuffer response = executeRequest (connection, args);
             System.out.println(response.toString());
-            ArrayList<PeriodListEntry> periodArray = new ArrayList<PeriodListEntry>();
+            ArrayList<PeriodCalendarEntry> periodArray = new ArrayList<PeriodCalendarEntry>();
             if((response.toString()).equals("null")) {
                 return periodArray;
             }
@@ -319,7 +322,7 @@ public class ServerCom
                 String startDate = cur.getString("start");
                 String endDate = cur.getString("end");
                 int days = cur.getInt("days");
-                periodArray.add(new PeriodListEntry(
+                periodArray.add(new PeriodCalendarEntry(
                         startDate, endDate, days));
             }
             System.out.println(response.toString());
@@ -377,9 +380,9 @@ public class ServerCom
 
 
     /**
-     *
+     * For the insights page with the sensor data
      */
-    public static ArrayList<PeriodCalendarEntry> get_all(String username) {
+    public static ArrayList<PeriodInsightsEntry> get_all(String username) {
         HttpURLConnection connection = null;
 
         String args = "get_all";
@@ -395,7 +398,7 @@ public class ServerCom
             StringBuffer response = executeRequest (connection, args);
             System.out.println(response.toString());
             JSONArray respJson = new JSONArray(response.toString());
-            ArrayList<PeriodCalendarEntry> periodArray = new ArrayList<PeriodCalendarEntry>();
+            ArrayList<PeriodInsightsEntry> periodArray = new ArrayList<PeriodInsightsEntry>();
             for (int i = 0; i < respJson.length(); i++)
             {
                 JSONObject cur = respJson.getJSONObject(i);
@@ -404,7 +407,7 @@ public class ServerCom
                 double rate = cur.getDouble("heart");
                 int mood = cur.getInt("mood");
                 boolean onPeriod = cur.getBoolean("period");
-                periodArray.add(new PeriodCalendarEntry(
+                periodArray.add(new PeriodInsightsEntry(
                         date, temp, rate, mood, onPeriod));
             }
             System.out.println(response.toString());
@@ -511,28 +514,42 @@ public class ServerCom
         }
     }
 
-    public static PeriodCalendarEntry day_stats(String username) {
+    public static UserEntry user(String username) {
         HttpURLConnection connection = null;
-
-        String args = "day_stats";
 
         try {
             //Create connection
             URL url = new URL(HOST + "users/" + username);
-            connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
+            StringBuilder response = new StringBuilder();
+            try {
+                connection = (HttpURLConnection) url.openConnection();
+                InputStream in = new BufferedInputStream(connection.getInputStream());
 
-            // Execute request with no args
-            StringBuffer response = executeRequest (connection, args);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+            }catch( Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                connection.disconnect();
+            }
+
+
             System.out.println(response.toString());
             JSONObject cur = new JSONObject(response.toString());
-            String date = cur.getString("date");
-            double temp = cur.getDouble("temp");
-            double rate = cur.getDouble("heart");
-            int mood = cur.getInt("mood");
-            boolean onPeriod = cur.getBoolean("period");
-            return new PeriodCalendarEntry(date, temp, rate, mood, onPeriod);
+
+            String username2 = cur.getString("username");
+            double avgSep = cur.getDouble("avg_sep");
+            double avgLen = cur.getDouble("avg_len");
+            int lenSample = cur.getInt("len_sample");
+            int sepSample = cur.getInt("sep_sample");
+            int daysUntil = cur.getInt("days_until");
+            return new UserEntry(username2, avgSep, lenSample, sepSample, daysUntil, avgLen);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

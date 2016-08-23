@@ -2,13 +2,10 @@ package com.microsoft.band.monitor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +13,18 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TabHost;
 
 import com.jjoe64.graphview.*;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.roomorama.caldroid.CaldroidFragment;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 
 
@@ -100,7 +96,7 @@ public class InsightsFragment extends Fragment {
         SharedPreferences prefs = getActivity().getSharedPreferences("Monitor", 0);
         username = prefs.getString("username", "UNKNOWN");
         Log.d("LOGIN", username);
-        ArrayList<PeriodCalendarEntry> rawData = ServerCom.get_all(username);
+        ArrayList<PeriodInsightsEntry> rawData = ServerCom.get_all(username);
 
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
 
@@ -127,7 +123,7 @@ public class InsightsFragment extends Fragment {
                 }
                 dataPoints[i] = new DataPoint(date, rawData.get(i).mood);
                 dataPoints2[i] = new DataPoint(date, rawData.get(i).heart);
-                dataPoints3[i] = new DataPoint(date, rawData.get(i).temp);
+                dataPoints3[i] = new DataPoint(date, convertToF(rawData.get(i).temp));
             }
 
             LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPoints);
@@ -169,7 +165,7 @@ public class InsightsFragment extends Fragment {
         graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
 
         graph.getViewport().setMinY(0.0);
-        graph.getViewport().setMaxY(50.0);
+        graph.getViewport().setMaxY(100.0);
 
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
@@ -195,11 +191,40 @@ public class InsightsFragment extends Fragment {
         dates = (ListView)view.findViewById(R.id.dates);
         duration = (ListView) view.findViewById(R.id.duration);
 
-        String[] blah = new String[]{"Average Duration of Cycle",
+        double avgHeart = 0;
+        double avgTemp = 0;
+        double avgMood = 0;
+        int points = 0;
+        //Pre-process items
+        for(Iterator<PeriodInsightsEntry> i = rawData.iterator(); i.hasNext();)
+        {
+            PeriodInsightsEntry item = i.next();
+            if (item.onPeriod){
+                points++;
+                avgHeart += item.heart;
+                avgMood += item.mood;
+                avgTemp += convertToF(item.temp);
+            }
+        }
+
+        avgHeart = avgHeart/points;
+        avgMood = avgMood/points;
+        avgTemp = avgTemp/points;
+
+        DecimalFormat numberFormat = new DecimalFormat("#.00");
+
+        String[] blah = new String[]{
+                "Average Duration of Cycle",
                 "Most Recorded Symptoms",
                 "Average Body Temperature During Cycle",
+                "Average Heart Rate During Cycle",
                 "Average Recorded Happiness Level"};
-        String[] plah = new String[]{"6 days","Cramps","75","2.4/5"};
+        String[] plah = new String[]{
+                Double.toString(ServerCom.user(username).avg_len),
+                "Cramps",
+                numberFormat.format(avgTemp) + " F",
+                numberFormat.format(avgHeart),
+                numberFormat.format(avgMood)+"/5"};
 
         ArrayAdapter<String> datesAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, blah){
@@ -333,5 +358,10 @@ public class InsightsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private double convertToF(double c) {
+        double toRet = c * 1.8; // convert to F
+        return toRet + 32;
     }
 }
