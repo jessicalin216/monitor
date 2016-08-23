@@ -131,12 +131,12 @@ public class CalendarFragment extends Fragment {
             String[] start = item.startDate.split("-");
             Date newStartDate = new Date(
                     Integer.parseInt(start[0]) - 2000 + 100,
-                    Integer.parseInt(start[1]) + 1,
+                    Integer.parseInt(start[1]) - 1,
                     Integer.parseInt(start[2]));
             String[] end = item.endDate.split("-");
             Date newEndDate = new Date(
                     Integer.parseInt(end[0]) - 2000 + 100,
-                    Integer.parseInt(end[1]) + 1,
+                    Integer.parseInt(end[1]) - 1,
                     Integer.parseInt(end[2]));
 
 
