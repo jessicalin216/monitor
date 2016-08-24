@@ -99,6 +99,9 @@ public class InsightsFragment extends Fragment {
         SharedPreferences prefs = getActivity().getSharedPreferences("Monitor", 0);
         username = prefs.getString("username", "UNKNOWN");
 
+        // Set title bar
+        getActivity().getActionBar().setTitle("Insights");
+
         ArrayList<PeriodInsightsEntry> rawData = ServerCom.get_all(username);
         UserEntry user = ServerCom.user(username);
 

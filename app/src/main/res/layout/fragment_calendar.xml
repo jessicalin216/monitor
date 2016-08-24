@@ -52,7 +52,6 @@
                             android:layout_margin="15dp"
                             android:id="@+id/startEndPeriodButton"
                             android:layout_gravity="center_horizontal"
-                            android:onClick="startEndPeriod"
                             android:background="@color/colorPrimaryDark"
                             android:text="Add a missing period"
                             android:textColor="#FFFFFF"

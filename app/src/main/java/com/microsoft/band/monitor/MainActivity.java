@@ -13,6 +13,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -164,6 +166,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
         // Handle navigation view item clicks here.
         fragment = null;
         final Class fragmentClass;
@@ -201,11 +205,10 @@ public class MainActivity extends AppCompatActivity
                         .replace(R.id.flContent, fragment)
                         .commit();
             }
-        }, 250);
+        }, 320);
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
@@ -453,6 +456,10 @@ public class MainActivity extends AppCompatActivity
 
     private void sendMessage(String message) throws BandIOException {
         client.getNotificationManager().showDialog(tileId, "monitor.", message);
+    }
+
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
     }
 
     private void togglePeriod() throws BandIOException {
