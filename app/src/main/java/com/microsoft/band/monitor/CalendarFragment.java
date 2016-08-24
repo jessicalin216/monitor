@@ -18,6 +18,8 @@ import android.widget.TabHost;
 import android.support.v4.app.FragmentTransaction;
 
 import com.roomorama.caldroid.CaldroidFragment;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -139,16 +141,21 @@ public class CalendarFragment extends Fragment {
                     Integer.parseInt(end[1]) - 1,
                     Integer.parseInt(end[2]));
 
+            Calendar c = Calendar.getInstance();
+            c.setTime(newEndDate);
+            c.add(Calendar.DATE, 1);
+            newEndDate = c.getTime();
 
-            System.out.println("ANGIE " + end[1] + " " + newEndDate);
-            caldroidFragment.setSelectedDates(newStartDate, newEndDate);
+            //caldroidFragment.setSelectedDates(newStartDate, newEndDate);
 
 
             List<Date> dateList = getDaysBetweenDates(newStartDate, newEndDate);
             // set the calendar dots on the calendar view
-            for (Iterator<Date> j = dateList.iterator(); j.hasNext(); ) {
+            for (Iterator<Date> j = dateList.iterator(); j.hasNext();) {
                 Date date_item = j.next();
 
+
+                System.out.println("ANGIE " + end[1] + " " + newEndDate);
                 // duration
                 caldroidFragment.setBackgroundDrawableForDate(d, date_item);
 

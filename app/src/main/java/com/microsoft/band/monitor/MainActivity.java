@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity
                         .replace(R.id.flContent, fragment)
                         .commit();
             }
-        }, 320);
+        }, 360);
 
 
 
@@ -302,8 +302,13 @@ public class MainActivity extends AppCompatActivity
 
                     if (onPeriod)
                         sendMessage("You made it!");
-                    else
-                        sendMessage(ServerCom.tip(username));
+                    else {
+                        String tip = ServerCom.tip(username);
+                        if(tip.contains("na"))
+                            tip="Avoid caffeine in the next few days!";
+                        sendMessage(tip);
+                    }
+
                     togglePeriod();
                 } catch (BandException e) {
                     handleBandException(e);
